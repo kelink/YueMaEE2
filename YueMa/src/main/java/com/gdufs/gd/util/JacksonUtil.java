@@ -105,4 +105,90 @@ public class JacksonUtil {
 
 	}
 	
+//	/**
+//     * 复杂对象的解析-测试用例
+//     * 
+//     * @throws JsonProcessingException
+//     * @throws IOException
+//     */
+//    @Test
+//    public void testParseComplexJson() throws JsonProcessingException, IOException {
+//        List<PlazaContent> list = new ArrayList<PlazaContent>();
+// 
+//        Map<String, Object> json = new HashMap<String, Object>();
+//        json.put("msg", "test");
+//        json.put("code", "111");
+//        Map<String, List<PlazaContent>> map = new HashMap<String, List<PlazaContent>>();
+//        for (int i = 0; i < 3; i++) {
+//            PlazaContent content = new PlazaContent();
+//            content.setType(new Integer(1));
+//            content.setAppType(3);
+//            content.setContent("苍井空美图" + i);
+//            content.setContentUrl("http://xxx/专辑url.jpg");
+//            content.setPicUrl("http://xxx/pic_url.jpg");
+//            content.setPublishPassport("fastwei@sohu.com");
+//            content.setPublishTime(new Date());
+//            content.setCount(new Integer(100 + i));
+//            content.setCommentCount(new Integer(50 + i));
+//            list.add(content);
+//        }
+// 
+//        map.put("fastwei@sohu.com", list);
+//        map.put("cangjingkong@sohu.com", list);
+// 
+//        json.put("data", map);
+//        String s = JsonUtils.toJson(json);
+// 
+//        //可以很好的反序列化为Java的泛型对象,居家必备之良品呀。
+//        Map<String, List<PlazaContent>> map2 = JsonUtils.jsonNode2GenericObject(JsonUtils.getNode(s, "data"),
+//                new TypeReference<Map<String, List<PlazaContent>>>() {});
+//        List<PlazaContent> list2 = map2.get("cangjingkong@sohu.com");
+//        System.out.println(list2.get(1).getContent());
+// 
+//        assertNotNull(s);
+//    }
+////新添加的两个方法
+//    /**
+//     * 根据json串和节点名返回节点
+//     * 
+//     * @param json
+//     * @param nodeName
+//     * @return
+//     */
+//    public static JsonNode getNode(String json, String nodeName) {
+//        JsonNode node = null;
+//        try {
+//            node = JsonUtils.getObjectMapper().readTree(json);
+//            return node.get(nodeName);
+//        } catch (JsonProcessingException e) {
+//            log.warn("json error:" + e.getMessage());
+//        } catch (IOException e) {
+//            log.warn("json error:" + e.getMessage());
+//        }
+//        return node;
+//    }
+// 
+//    /**
+//     * JsonNode转换为Java泛型对象，可以是各种类型，此方法最为强大。用法看测试用例。
+//     * 
+//     * @param <T>
+//     * @param node JsonNode
+//     * @param tr TypeReference,例如: new TypeReference< List<FamousUser> >(){}
+//     * @return List对象列表
+//     */
+//    public static <T> T jsonNode2GenericObject(JsonNode node, TypeReference<T> tr) {
+// 
+//        if (node == null || "".equals(node)) {
+//            return null;
+//        } else {
+//            try {
+//                return (T) objectMapper.readValue(node, tr);
+//            } catch (Exception e) {
+//                log.warn("json error:" + e.getMessage());
+//            }
+//        }
+//        return null;
+//    }
+ 
+	
 }
