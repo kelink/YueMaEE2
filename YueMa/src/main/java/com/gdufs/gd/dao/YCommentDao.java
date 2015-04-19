@@ -5,15 +5,20 @@ import java.util.List;
 import com.gdufs.gd.entity.YComment;
 
  public interface YCommentDao {
+	 /**
+	  * 添加活动的评论
+	  * @param comment
+	  * @return
+	  */
 	public boolean add(YComment comment);
-
-	public boolean update(YComment comment);
-	
-	public YComment getCommentById(int id);
-	
-	public List<YComment> getCommentByUserId(int uId);
-
+	/**
+	 * 删除活动的评论
+	 * @param comment
+	 * @return
+	 */
 	public boolean delete(YComment comment);
+	
+	
+	public List<YComment> getCommentsByActivityId(int activityId);
 
-	public boolean deleteById(YComment comment);
 }

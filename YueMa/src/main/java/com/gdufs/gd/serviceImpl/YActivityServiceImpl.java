@@ -29,9 +29,6 @@ public class YActivityServiceImpl implements YActivityService {
 	private static final Logger logger = LoggerFactory
 			.getLogger(YActivityServiceImpl.class);
 
-	public YActivityServiceImpl() {
-	}
-
 	@Resource(name = "activityDao")
 	private YActivityDao activityDao;
 
@@ -66,13 +63,21 @@ public class YActivityServiceImpl implements YActivityService {
 	 * 通过电话号码获取朋友圈子的动态
 	 */
 	@Override
-	public List<YActivity> getYActivitiesbyPhonNum(String phoneNum) {
-		List<YActivity> resultList=new ArrayList<YActivity>();
-		resultList.addAll(activityDao.getFirstActivitiesbyPhonNnum(phoneNum));
-		resultList.addAll(activityDao.getSecondActivitiesbyPhonNnum(phoneNum));
-		resultList.addAll(activityDao.getMyActivitiesbyPhonNnum(phoneNum));
-		Collections.sort(resultList,new ActivityComparator());//排序输出
+	public List<YActivity> getALLActivitiesbyPhonNum(String phoneNum) {
+		List<YActivity> resultList=activityDao.getAllActivity(phoneNum);
 		return resultList;
+	}
+
+	@Override
+	public List<YActivity> getActivitiesOnPage(int pageNum, int pageSize,
+			String phoneNum) {
+		List<YActivity> resultList=activityDao.getActivityOnPage(pageNum, pageSize, phoneNum);
+		return resultList;
+	}
+
+	@Override
+	public int countFriendActivity(String phoneNum) {
+		return activityDao.countFriendsActivity(phoneNum);
 	}
 
 }

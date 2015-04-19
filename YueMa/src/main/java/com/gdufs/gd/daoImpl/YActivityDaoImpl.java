@@ -24,6 +24,9 @@ public class YActivityDaoImpl extends BaseDao implements YActivityDao {
 	public YActivityDaoImpl() {
 	}
 
+	/**
+	 * 新增加活动
+	 */
 	@Override
 	public boolean add(YActivity activity) {
 		Session session = this.getSession();
@@ -63,6 +66,9 @@ public class YActivityDaoImpl extends BaseDao implements YActivityDao {
 		return false;
 	}
 
+	/**
+	 *通过活动id获取活动
+	 */
 	@Override
 	public YActivity getActivityByActivityId(int aid) {
 		Session session = this.getSession();
@@ -73,6 +79,9 @@ public class YActivityDaoImpl extends BaseDao implements YActivityDao {
 		return activity;
 	}
 
+	/**
+	 * 通过用户id查找创建的
+	 */
 	@Override
 	public List<YActivity> getActivityByCreatorId(int uId) {
 		Session session = this.getSession();
@@ -83,6 +92,9 @@ public class YActivityDaoImpl extends BaseDao implements YActivityDao {
 		return user;
 	}
 
+	/**
+	 * 删除活动和其关系
+	 */
 	@Override
 	public boolean delete(int activityId) {
 		Session session = this.getSession();
@@ -112,33 +124,24 @@ public class YActivityDaoImpl extends BaseDao implements YActivityDao {
 			return false;
 		}
 	}
-
-	@Override
-	public List<YActivity> getActivityByPage(int pageNum, int pageSize) {
-		// 需要修改
-		Session session = this.getSession();
-		String hql = "from YActivity activity";
-		Query query = session.createQuery(hql);
-		int offSet = (pageNum - 1) * pageSize >= 0 ? (pageNum - 1) * pageSize
-				: 0;
-		query.setFirstResult(offSet);
-		query.setMaxResults(pageSize);
-		return query.list();
-	}
-
+	/**
+	 *  查找我发布的
+	 */
 	@Override
 	public List<YActivity> getMyActivitiesbyPhonNnum(String phoneNum) {
-		// 查找我发布的
+		
 		Session session = this.getSession();
 		String hql = "from YActivity activity where activity.creatorPhoneNum=? order by activity.createTimeDate desc";
 		Query query = session.createQuery(hql);
 		query.setParameter(0, phoneNum);
 		return query.list();
 	}
-
+	/**
+	 *  查找一度人脉发布的
+	 */
 	@Override
 	public List<YActivity> getFirstActivitiesbyPhonNnum(String phoneNum) {
-		// 查找一度人脉发布的
+		
 		Session session = this.getSession();
 		String hql = "from YActivity activity where activity.creatorPhoneNum in(select friendNum from YContact contact where contact.hostNum=? and contact.isSysUser=1) order by activity.createTimeDate desc";
 		Query query = session.createQuery(hql);
@@ -146,14 +149,71 @@ public class YActivityDaoImpl extends BaseDao implements YActivityDao {
 		return query.list();
 	}
 
+	/**
+	 *  查找二度人脉发布的
+	 */
 	@Override
 	public List<YActivity> getSecondActivitiesbyPhonNnum(String phoneNum) {
-		// 查找一度人脉发布的
+		
 		Session session = this.getSession();
 		String hql = "from YActivity activity where activity.creatorPhoneNum in(select friendNum from YRelationSecond relationsecond where relationsecond.hostNum=?) order by activity.createTimeDate desc";
 		Query query = session.createQuery(hql);
 		query.setParameter(0, phoneNum);
 		return query.list();
+	}
+
+	/**
+	 * 查找用户所有的活动
+	 */
+	@Override
+	public List<YActivity> getAllActivity(String phoneNum) {
+		Session session = this.getSession();
+		String hql = "from YActivity activity where activity.creatorPhoneNum=? or activity.creatorPhoneNum in(select friendNum from YRelationSecond relationsecond where relationsecond.hostNum=?) or activity.creatorPhoneNum in(select friendNum from YRelationSecond relationsecond where relationsecond.hostNum=?) order by activity.createTimeDate desc";
+		Query query = session.createQuery(hql);
+		query.setParameter(0, phoneNum);
+		query.setParameter(1, phoneNum);
+		query.setParameter(2, phoneNum);
+		return query.list();
+	}
+
+	
+	/**
+	 * 分页查找用户的活动
+	 */
+	@Override
+	public List<YActivity> getActivityOnPage(int pageNum, int pageSize,
+			String phoneNum) {
+		Session session = this.getSession();
+		String hql = "from YActivity activity where activity.creatorPhoneNum=? "
+				+ "or activity.creatorPhoneNum in(select friendNum from YRelationSecond relationsecond where relationsecond.hostNum=?) "
+				+ "or activity.creatorPhoneNum in(select friendNum from YRelationSecond relationsecond where relationsecond.hostNum=?) "
+				+"or activity.creatorPhoneNum in(select hostNum from YRelationSecond relationsecond where relationsecond.friendNum=?)"
+				+ "order by activity.createTimeDate desc";
+		Query query = session.createQuery(hql);
+		int offSet = (pageNum  * pageSize)>= 0 ? (pageNum  * pageSize): 0;
+		query.setParameter(0, phoneNum);
+		query.setParameter(1, phoneNum);
+		query.setParameter(2, phoneNum);
+		query.setParameter(3, phoneNum);
+		query.setFirstResult(offSet);
+		query.setMaxResults(pageSize);
+		return query.list();
+	}
+
+	/**
+	 * 计算用户朋友圈的信息的个数
+	 */
+	@Override
+	public int countFriendsActivity(String phoneNum) {
+		Session session = this.getSession();
+		String hql = "select count(*) from YActivity activity where activity.creatorPhoneNum=? or activity.creatorPhoneNum in(select friendNum from YRelationSecond relationsecond where relationsecond.hostNum=?) or activity.creatorPhoneNum in(select friendNum from YRelationSecond relationsecond where relationsecond.hostNum=?)";
+		Query query = session.createQuery(hql);
+		query.setParameter(0, phoneNum);
+		query.setParameter(1, phoneNum);
+		query.setParameter(2, phoneNum);
+		Object object=query.uniqueResult();
+		int num=Integer.parseInt(object.toString());
+		return num;
 	}
 
 }

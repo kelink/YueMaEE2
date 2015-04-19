@@ -23,6 +23,7 @@ public class TransferMessage implements Serializable {
 	private String code;
 	private String message;
 	private Map<String, ?> resultMap;
+	private String extra="";
 
 	public String getCode() {
 		return code;
@@ -46,6 +47,14 @@ public class TransferMessage implements Serializable {
 
 	public void setResultMap(Map<String, ?> resultMap) {
 		this.resultMap = resultMap;
+	}
+
+	public String getExtra() {
+		return extra;
+	}
+
+	public void setExtra(String extra) {
+		this.extra = extra;
 	}
 
 	@Override

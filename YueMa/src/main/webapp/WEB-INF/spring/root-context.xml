@@ -53,8 +53,9 @@
 				<value>com.gdufs.gd.entity.YRemindUserPK</value>	
 				<value>com.gdufs.gd.entity.YMessage</value>
 				<value>com.gdufs.gd.entity.YMessageUser</value>	
-				<value>com.gdufs.gd.entity.YHistory</value>	
+				
 				<!--  	
+				<value>com.gdufs.gd.entity.YHistory</value>	
 				<value>com.gdufs.gd.entity.YLabel</value>	
 				<value>com.gdufs.gd.entity.YPicture</value>	
 				-->	

@@ -14,8 +14,6 @@ public interface YActivityDao {
 
 	public List<YActivity> getActivityByCreatorId(int uId);
 	
-	public List<YActivity> getActivityByPage(int pageNum, int pageSize);
-	
 
 	/**
 	 *  查找我发布的活动
@@ -37,6 +35,28 @@ public interface YActivityDao {
 	 * @return
 	 */
 	public List<YActivity> getSecondActivitiesbyPhonNnum(String phoneNum);
+	
+	/**
+	 * 查找全部的朋友圈的活动
+	 * @param activityId
+	 * @return
+	 */
+	public List<YActivity> getAllActivity(String phoneNum);
+	
+	/**
+	 * 分页获取朋友圈的活动
+	 * @param pageNum
+	 * @param pageSize
+	 * @param phoneNum
+	 * @return
+	 */
+	public List<YActivity> getActivityOnPage(int pageNum, int pageSize,
+			String phoneNum);
+	/**
+	 * 获取朋友圈的活动的总个数
+	 * @return
+	 */
+	public int countFriendsActivity(String phoneNum);
 	
 	public boolean delete(int activityId);
 }

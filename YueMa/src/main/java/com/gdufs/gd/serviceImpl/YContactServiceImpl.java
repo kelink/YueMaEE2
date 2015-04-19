@@ -62,4 +62,12 @@ public class YContactServiceImpl implements YContactService {
 		return false;
 	}
 
+	/**
+	 * 更新获取一度人脉关系
+	 */
+	@Override
+	public List<YContact> getFirstContacts(String phoneNum) {
+		return contactDao.getFirstContact(phoneNum);
+	}
+
 }

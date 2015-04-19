@@ -40,6 +40,7 @@ public class YActivity implements Serializable {
 	private String activityAddressLongitude;// 经度
 	private String activityAddressLatitude;// 纬度
 	private int count;// 最多人数
+	private int likeNum;//赞的人数
 
 	private YUser creator;// 创建者
 	private Set<YActivityUser> activityUsers = new HashSet<YActivityUser>();// 参与者
@@ -67,7 +68,7 @@ public class YActivity implements Serializable {
 		this.activityUsers = activityUsers;
 	}
 
-	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, fetch = FetchType.LAZY,targetEntity = YComment.class) 
 	public Set<YComment> getComments() {
 		return comments;
 	}
@@ -237,6 +238,14 @@ public class YActivity implements Serializable {
 	public void setCategory(String category) {
 		this.category = category;
 	}
+	@Column(name = "likeNum", length = 11, nullable = false)
+	public int getLikeNum() {
+		return likeNum;
+	}
+
+	public void setLikeNum(int likeNum) {
+		this.likeNum = likeNum;
+	}
 
 	@Override
 	public int hashCode() {
@@ -271,8 +280,8 @@ public class YActivity implements Serializable {
 				+ ", activityAddress=" + activityAddress
 				+ ", activityAddressLongitude=" + activityAddressLongitude
 				+ ", activityAddressLatitude=" + activityAddressLatitude
-				+ ", count=" + count + ", creatorId=" + creator.getId()
-				+ "]";
+				+ ", count=" + count + ", likeNum=" + likeNum + "]";
 	}
+
 
 }

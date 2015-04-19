@@ -18,7 +18,7 @@ public class YUserDaoImpl extends BaseDao implements YUserDao {
 			.getLogger(YUserDaoImpl.class);
 
 	@Override
-	public boolean addYUser(YUser user) {
+	public boolean addUser(YUser user) {
 		Session session = this.getSession();
 		Transaction tx = null;
 		try {
@@ -38,13 +38,7 @@ public class YUserDaoImpl extends BaseDao implements YUserDao {
 	}
 
 	@Override
-	public boolean add(YUser user) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean update(YUser user) {
+	public boolean updateUser(YUser user) {
 		//需要重写
 		Session session = this.getSession();
 		Transaction tx = null;

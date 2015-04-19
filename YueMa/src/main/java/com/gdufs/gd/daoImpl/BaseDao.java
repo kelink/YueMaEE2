@@ -1,5 +1,7 @@
 package com.gdufs.gd.daoImpl;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +12,7 @@ import javax.annotation.Resource;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.orm.hibernate4.SessionFactoryUtils;
 
 public class BaseDao {
 	public BaseDao() {
@@ -26,6 +29,17 @@ public class BaseDao {
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
+	
+	//获取connection 进行原始操作
+	public Connection getConnection() {  
+		try {
+			return SessionFactoryUtils.getDataSource(sessionFactory).getConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+    }  
 
 	//////////////////////////////////////////////////////////
 	//封装获取Hql

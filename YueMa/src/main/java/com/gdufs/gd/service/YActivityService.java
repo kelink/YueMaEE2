@@ -45,5 +45,15 @@ public interface YActivityService {
 	 * 包括自己，一度朋友，二度朋友
 	 * @return
 	 */
-	public List<YActivity> getYActivitiesbyPhonNum(String phoneNum);
+	public List<YActivity> getALLActivitiesbyPhonNum(String phoneNum);
+	
+	/**
+	 * 分页获取
+	 * @param phoneNum
+	 * @return
+	 */
+	public List<YActivity> getActivitiesOnPage(int pageNum, int pageSize,
+			String phoneNum);
+	
+	public int countFriendActivity(String phoneNum);
 }

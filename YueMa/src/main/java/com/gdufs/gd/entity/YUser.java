@@ -59,7 +59,7 @@ public class YUser extends BaseEntity {
 		this.activityUsers = activityUsers;
 	}
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY,targetEntity = YComment.class) 
 	public Set<YComment> getComments() {
 		return comments;
 	}

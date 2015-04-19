@@ -1,5 +1,7 @@
 package com.gdufs.gd.dao;
 
+import java.util.List;
+
 import com.gdufs.gd.entity.YActivityUser;
 
 /**
@@ -43,5 +45,7 @@ public interface YActivityUserDao {
 	 * @return
 	 */
 	public boolean deleteByActivityId(int activityId);
+	
+	public List<YActivityUser> getUserJoinOrCreate(int uId);
 
 }

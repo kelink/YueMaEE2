@@ -1,6 +1,7 @@
 package com.gdufs.gd;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.gdufs.gd.common.C;
 import com.gdufs.gd.entity.TransferMessage;
 import com.gdufs.gd.entity.YContact;
+import com.gdufs.gd.response.modle.FriendsActivityObj;
 import com.gdufs.gd.service.YContactService;
 import com.gdufs.gd.util.JacksonUtil;
 
@@ -43,9 +45,13 @@ public class ContactController {
 		 System.out.println("phoneNum--------->"+phoneNum);
 		 System.out.println("contactStr------>"+contactStr);
 		TransferMessage messageObj = new TransferMessage();
-		if (phoneNum.equals("")||contactStr.equals("")) {
+		if (phoneNum.equals("")) {
 			messageObj.setCode(C.ResponseCode.ERROR);
 			messageObj.setMessage(C.ResponseMessage.REQUEST_ERROR);
+			messageObj.setResultMap(null);
+		}else if(contactStr.equals("")){
+			messageObj.setCode(C.ResponseCode.SUCCESS);
+			messageObj.setMessage(C.ResponseMessage.SUCCESS);
 			messageObj.setResultMap(null);
 		}else {
 			String[] list=contactStr.split("-");
@@ -74,9 +80,31 @@ public class ContactController {
 	}
 
 	/**
-	 * 获取表的所有通讯录
-	 */
-
+	 *获取一度人脉 
+	 */ 
+	 @RequestMapping(value = "/getFirstPeople",method = {RequestMethod.GET,RequestMethod.POST})  
+	 @ResponseBody
+	 public String  getFirstPeople(@RequestParam(value =C.ParamsName.PHONE_NUM) String phoneNum){
+		 TransferMessage messageObj = new TransferMessage();
+			if (phoneNum.equals("")) {
+				messageObj.setCode(C.ResponseCode.ERROR);
+				messageObj.setMessage(C.ResponseMessage.REQUEST_ERROR);
+				messageObj.setResultMap(null);
+			}else {
+				List<YContact> contacts=contactService.getFirstContacts(phoneNum);
+				HashMap<String,List<YContact>>  resultMap=new HashMap<String,List<YContact>>();
+				resultMap.put("result", contacts);
+				messageObj.setCode(C.ResponseCode.SUCCESS);
+				messageObj.setMessage(C.ResponseMessage.SUCCESS);
+				messageObj.setResultMap(resultMap);
+			}
+			return JacksonUtil.writeEntity2JSON(messageObj);
+	 }
+	 
+	 /**
+	  * 获取二度人脉
+	  */
+	 
 
 	/**
 	 * 更新通信录

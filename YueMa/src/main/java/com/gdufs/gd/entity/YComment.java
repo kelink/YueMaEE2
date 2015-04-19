@@ -2,6 +2,7 @@ package com.gdufs.gd.entity;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,9 +29,9 @@ import com.gdufs.gd.entity.BaseEntity;
  */
 @Entity
 @Table(name = "YComment")
-@IdClass(YActivityUserPK.class)
 public class YComment extends BaseEntity {
 	private static final long serialVersionUID = 1L;	
+	private int id;
 	private String content;	
 	private Date createTime=new Date();	
 	private int isDelete;	
@@ -41,6 +42,18 @@ public class YComment extends BaseEntity {
 	private YUser user;//对应的用户
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(length = 11, name = "id")
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	@ManyToOne(cascade = { CascadeType.MERGE })   
+	@JoinColumn(name ="activityId")
 	public YActivity getActivity() {
 		return activity;
 	}
@@ -48,8 +61,9 @@ public class YComment extends BaseEntity {
 	public void setActivity(YActivity activity) {
 		this.activity = activity;
 	}
-
-	@Id
+	
+	@ManyToOne(cascade = { CascadeType.MERGE })   
+	@JoinColumn(name ="userId")
 	public YUser getUser() {
 		return user;
 	}
@@ -67,6 +81,7 @@ public class YComment extends BaseEntity {
 		this.content = content;
 	}
 	
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "createTime", length = 11, nullable = false)
 	@DateTimeFormat(pattern = "yyyy-mm-dd hh:mm:ss")
 	public Date getCreateTime() {
@@ -76,7 +91,7 @@ public class YComment extends BaseEntity {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	@Column(name = "isDelete", length = 11, nullable = false)
+	@Column(name = "isDelete", length = 11, nullable = false,columnDefinition="INT default 0")
 	public int getIsDelete() {
 		return isDelete;
 	}
@@ -84,7 +99,7 @@ public class YComment extends BaseEntity {
 	public void setIsDelete(int isDelete) {
 		this.isDelete = isDelete;
 	}
-	@Column(name = "fatherCommentId", length = 11, nullable = false)
+	@Column(name = "fatherCommentId", length = 11, nullable = false,columnDefinition="INT default 0")
 	public int getFatherCommentId() {
 		return fatherCommentId;
 	}

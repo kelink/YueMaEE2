@@ -1,5 +1,7 @@
 package com.gdufs.gd.daoImpl;
 
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -88,6 +90,15 @@ public class YActivityUserDaoImpl extends BaseDao implements YActivityUserDao {
 			logger.error("Add activity error" + ex.getMessage());
 			return false;
 		}
+	}
+
+	@Override
+	public List<YActivityUser> getUserJoinOrCreate(int uId) {
+		Session session = this.getSession();
+		String hql = "from YActivityUser activityUser where activityUser.user.id=? order by activityUser.join_time desc";
+		Query query = session.createQuery(hql);
+		query.setParameter(0, uId);
+		return query.list();
 	}
 
 }

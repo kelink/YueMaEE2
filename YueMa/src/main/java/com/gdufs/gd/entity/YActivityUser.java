@@ -29,6 +29,7 @@ public class YActivityUser implements Serializable {
 	private Date join_time=new Date();
 	private int isTickOff;//是否剔除，默认值为0
 	private int isAuth;//是否验证，默认为0
+	private int type;//0表示新创建，1表示参与
 
 	@Id
 	public YActivity getActivity() {
@@ -77,14 +78,26 @@ public class YActivityUser implements Serializable {
 		this.isAuth = isAuth;
 	}
 
+	@Column(name = "type", length = 50, nullable = false)
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	@Override
+	public String toString() {
+		return "YActivityUser [activityId=" + activity.getId()+ ", userId=" + user.getId()
+				+ ", join_time=" + join_time + ", isTickOff=" + isTickOff
+				+ ", isAuth=" + isAuth + ", type=" + type + "]";
+	}
+
 	/**
 	 * Jackson 序列化和toString 方法有关，记得覆写
 	 */
-	@Override
-	public String toString() {
-		return "YActivityUser [join_time=" + join_time + ", isTickOff="
-				+ isTickOff + ", isAuth=" + isAuth +",activityId="+activity.getId()+",userId="+user.getId()+"]";
-	}
+	
 
 	
 	

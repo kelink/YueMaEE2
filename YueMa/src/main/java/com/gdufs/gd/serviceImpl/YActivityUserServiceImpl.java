@@ -1,6 +1,7 @@
 package com.gdufs.gd.serviceImpl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -53,6 +54,14 @@ public class YActivityUserServiceImpl implements YActivityUserService {
 	@Override
 	public boolean quitActivity(int activityId, int uId) {
 		return activityUserDao.delete(activityUserDao.query(uId, activityId));
+	}
+
+	/**
+	 * 用户参与或者创建的活动
+	 */
+	@Override
+	public List<YActivityUser> getUserJoinOrCreate(int uId) {	
+		return activityUserDao.getUserJoinOrCreate(uId);
 	}
 
 }

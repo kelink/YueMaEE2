@@ -18,5 +18,12 @@ public interface YContactService {
 	public boolean updateContact(YContact contactObj);
 
 	public boolean updateContactByUserId(int userId, List<YContact> contactList);
+	
+	/**
+	 * 获取一度人脉
+	 * @param phoneNum
+	 * @return
+	 */
+	public List<YContact> getFirstContacts(String phoneNum);
 
 }
