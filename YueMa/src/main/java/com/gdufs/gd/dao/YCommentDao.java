@@ -16,7 +16,7 @@ import com.gdufs.gd.entity.YComment;
 	 * @param comment
 	 * @return
 	 */
-	public boolean delete(YComment comment);
+	public boolean deleteById(int commentId);
 	
 	
 	public List<YComment> getCommentsByActivityId(int activityId);

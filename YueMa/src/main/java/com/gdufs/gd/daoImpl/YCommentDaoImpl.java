@@ -35,9 +35,24 @@ public class YCommentDaoImpl extends BaseDao implements YCommentDao{
 	}
 
 	@Override
-	public boolean delete(YComment comment) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean deleteById(int commentId) {
+		Session session = this.getSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			Query query = session.createQuery("delete YComment comment where comment.id=?");
+			query.setInteger(0, commentId);
+			query.executeUpdate();
+			tx.commit();
+			return true;
+		} catch (Exception ex) {
+			if (tx != null) {
+				tx.rollback();
+			}
+			System.out.println(ex);
+			logger.error("Add YUser error" + ex.getMessage());
+			return false;
+		}
 	}
 
 	@Override

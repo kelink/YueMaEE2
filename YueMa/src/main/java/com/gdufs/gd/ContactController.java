@@ -104,7 +104,24 @@ public class ContactController {
 	 /**
 	  * 获取二度人脉
 	  */
-	 
+	 @RequestMapping(value = "/getSecondPeople",method = {RequestMethod.GET,RequestMethod.POST})  
+	 @ResponseBody
+	 public String  getSecondPeople(@RequestParam(value =C.ParamsName.PHONE_NUM) String phoneNum){
+		 TransferMessage messageObj = new TransferMessage();
+			if (phoneNum.equals("")) {
+				messageObj.setCode(C.ResponseCode.ERROR);
+				messageObj.setMessage(C.ResponseMessage.REQUEST_ERROR);
+				messageObj.setResultMap(null);
+			}else {
+//				List<YContact> contacts=contactService.getFirstContacts(phoneNum);
+//				HashMap<String,List<YContact>>  resultMap=new HashMap<String,List<YContact>>();
+//				resultMap.put("result", contacts);
+//				messageObj.setCode(C.ResponseCode.SUCCESS);
+//				messageObj.setMessage(C.ResponseMessage.SUCCESS);
+//				messageObj.setResultMap(resultMap);
+			}
+			return JacksonUtil.writeEntity2JSON(messageObj);
+	 }
 
 	/**
 	 * 更新通信录

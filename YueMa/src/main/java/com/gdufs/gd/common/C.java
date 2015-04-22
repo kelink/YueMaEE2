@@ -36,6 +36,7 @@ public class C {
 		public static final String FIRST="first";
 		public static final String SECOND="second";
 		//评论
+		public static final String COMMENT_ID="commentId";//评论的id
 		public static final String COMMENT_CONTENT="commentContent";//评论内容
 		public static final String COMMENT_FATHER="fatherCommentId";//父评论的id
 		

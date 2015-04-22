@@ -29,9 +29,8 @@ public class YCommentServiceImpl implements YCommentService{
 	}
 
 	@Override
-	public boolean delete(YComment comment) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean delete(int commentId) {
+		return commentDao.deleteById(commentId);
 	}
 
 	@Override

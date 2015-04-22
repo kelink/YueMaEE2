@@ -16,7 +16,7 @@ public interface YCommentService {
 	 * @param comment
 	 * @return
 	 */
-	public boolean delete(YComment comment);
+	public boolean delete(int commentId);
 	
 	
 	public List<YComment> getCommentsByActivityId(int activityId);

@@ -185,7 +185,7 @@ public class YActivityDaoImpl extends BaseDao implements YActivityDao {
 			String phoneNum) {
 		Session session = this.getSession();
 		String hql = "from YActivity activity where activity.creatorPhoneNum=? "
-				+ "or activity.creatorPhoneNum in(select friendNum from YRelationSecond relationsecond where relationsecond.hostNum=?) "
+				+"or activity.creatorPhoneNum in(select friendNum from YContact contact where contact.hostNum=? and contact.isSysUser=?)"
 				+ "or activity.creatorPhoneNum in(select friendNum from YRelationSecond relationsecond where relationsecond.hostNum=?) "
 				+"or activity.creatorPhoneNum in(select hostNum from YRelationSecond relationsecond where relationsecond.friendNum=?)"
 				+ "order by activity.createTimeDate desc";
@@ -193,8 +193,9 @@ public class YActivityDaoImpl extends BaseDao implements YActivityDao {
 		int offSet = (pageNum  * pageSize)>= 0 ? (pageNum  * pageSize): 0;
 		query.setParameter(0, phoneNum);
 		query.setParameter(1, phoneNum);
-		query.setParameter(2, phoneNum);
+		query.setParameter(2, 1);
 		query.setParameter(3, phoneNum);
+		query.setParameter(4, phoneNum);
 		query.setFirstResult(offSet);
 		query.setMaxResults(pageSize);
 		return query.list();
@@ -206,11 +207,16 @@ public class YActivityDaoImpl extends BaseDao implements YActivityDao {
 	@Override
 	public int countFriendsActivity(String phoneNum) {
 		Session session = this.getSession();
-		String hql = "select count(*) from YActivity activity where activity.creatorPhoneNum=? or activity.creatorPhoneNum in(select friendNum from YRelationSecond relationsecond where relationsecond.hostNum=?) or activity.creatorPhoneNum in(select friendNum from YRelationSecond relationsecond where relationsecond.hostNum=?)";
+		String hql = "select count(*) from YActivity activity where activity.creatorPhoneNum=? "
+				+"or activity.creatorPhoneNum in(select friendNum from YContact contact where contact.hostNum=? and contact.isSysUser=?)"
+				+ "or activity.creatorPhoneNum in(select friendNum from YRelationSecond relationsecond where relationsecond.hostNum=?) "
+				+ "or activity.creatorPhoneNum in(select hostNum from YRelationSecond relationsecond where relationsecond.friendNum=?)";
 		Query query = session.createQuery(hql);
 		query.setParameter(0, phoneNum);
 		query.setParameter(1, phoneNum);
-		query.setParameter(2, phoneNum);
+		query.setParameter(2, 1);
+		query.setParameter(3, phoneNum);
+		query.setParameter(4, phoneNum);
 		Object object=query.uniqueResult();
 		int num=Integer.parseInt(object.toString());
 		return num;
