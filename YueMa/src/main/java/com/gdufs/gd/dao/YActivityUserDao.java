@@ -36,7 +36,7 @@ public interface YActivityUserDao {
 	 * @param activityId
 	 * @return
 	 */
-	public boolean delete(YActivityUser activityUser);
+	public boolean delete(int activityId, int userId);
 
 	/**
 	 * 删除活动时候删除所有joiner
@@ -47,5 +47,9 @@ public interface YActivityUserDao {
 	public boolean deleteByActivityId(int activityId);
 	
 	public List<YActivityUser> getUserJoinOrCreate(int uId);
+	
+	public int countJoinOrCreate(int uId);
+	
+	public int countJoinOrCreateByPhone(String phoneNum);
 
 }

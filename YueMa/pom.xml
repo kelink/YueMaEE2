@@ -15,6 +15,7 @@
 		<org.hibernate-version>4.3.1.Final</org.hibernate-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>3.2.3.RELEASE</spring.version>
+
 	</properties>
 	<dependencies>
 		<!-- Spring -->
@@ -72,7 +73,7 @@
 			<version>${org.springframework-version}</version>
 		</dependency>
 
-		<!-- commons  file upload -->
+		<!-- commons file upload -->
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
@@ -291,6 +292,45 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-batch</artifactId>
 			<version>1.0.0.RELEASE</version>
+		</dependency>
+		<!-- zxing 二维码识别 -->
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>javase</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<!-- zxing 二维码识别结束 -->
+		<!-- 自定义的关系计算模块 -->
+		  
+		<dependency>
+			<groupId>MyLocalJar</groupId>
+			<artifactId>RelationCal</artifactId>
+			<version>1.0</version>
+		</dependency>
+		
+		<!-- 服务器端缓存 -->
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+			<version>2.10.0</version>
+		</dependency>
+		<!-- 服务器端缓存 End -->
+		<!-- 客户端缓存 -->
+		<dependency>
+			<groupId>net.rossillo.mvc.cache</groupId>
+			<artifactId>spring-mvc-cache-control</artifactId>
+			<version>1.1.1-RELEASE</version>
+		</dependency>
+		<!-- 客户端缓存 End -->
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<version>3.1.1</version>
 		</dependency>
 	</dependencies>
 	<build>

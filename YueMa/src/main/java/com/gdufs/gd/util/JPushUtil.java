@@ -2,6 +2,7 @@ package com.gdufs.gd.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -21,31 +22,20 @@ import cn.jpush.api.push.model.audience.AudienceTarget;
 import cn.jpush.api.push.model.notification.AndroidNotification;
 import cn.jpush.api.push.model.notification.IosNotification;
 import cn.jpush.api.push.model.notification.Notification;
-import cn.jpush.api.report.ReceivedsResult;
-
-import com.gdufs.gd.serviceImpl.JPushServiecImpl;
 
 /**
- * 单例模式实现JPush 工具类
- * 
+ * 推送服务的工具包
  * @author Administrator
  *
  */
 public class JPushUtil {
-
 	protected static final Logger LOG = LoggerFactory
-			.getLogger(JPushServiecImpl.class);
+			.getLogger(JPushUtil.class);
+
 	private String appKey;
 	private String masterSecret;
 	private int maxReTryTimes;
 	private JPushClient client;
-	// 参数
-	private String TITLE;
-	private String ALERT;
-	private String MSG_CONTENT;
-	private String REGISTRATION_ID;
-	private String TAG;
-
 	private static JPushUtil instant;
 	private static Properties p;
 
@@ -75,85 +65,56 @@ public class JPushUtil {
 		return instant;
 	}
 
-	public static void main(String[] args) {
-		JPushUtil.getInstant().sendPush(
-				JPushUtil.buildPushObject_all_all_alert("test"));
-	}
-
-	/**
-	 * 发送通知
-	 */
-	public void sendPush(PushPayload payload) {
-		try {
-			PushResult result = client.sendPush(payload);
-		} catch (APIConnectionException e) {
-			LOG.error("Connection error. Should retry later. ", e);
-
-		} catch (APIRequestException e) {
-			LOG.error(
-					"Error response from JPush server. Should review and fix it. ",
-					e);
-			LOG.info("HTTP Status: " + e.getStatus());
-			LOG.info("Error Code: " + e.getErrorCode());
-			LOG.info("Error Message: " + e.getErrorMessage());
-			LOG.info("Msg ID: " + e.getMsgId());
-		}
-	}
-
-	/**
-	 * 推送通知到所有平台，所有用户
-	 * 
-	 * @param alertMsg
-	 * @return
-	 */
-	public static PushPayload buildPushObject_all_all_alert(String alertMsg) {
-		return PushPayload.alertAll(alertMsg);
-	}
-
-	/**
-	 * 推送通知给所有平台，别称为指定的用户
-	 * 
-	 * @return
-	 */
-	public static PushPayload buildPushObject_all_alias_alert(String alert,
-			String... alias) {
-		return PushPayload.newBuilder().setPlatform(Platform.all())
-				.setAudience(Audience.alias(alias))
-				.setNotification(Notification.alert(alert)).build();
-	}
-
-	/**
-	 * 推送通知给android平台，别称为指定的用户
-	 * 
-	 * @return
-	 */
-	public static PushPayload buildPushObject_android_alias_alert(String alert,
-			String... alias) {
-		return PushPayload.newBuilder().setPlatform(Platform.android())
-				.setAudience(Audience.alias(alias))
-				.setNotification(Notification.alert(alert)).build();
-	}
-
-	/**
-	 * 推送通知给android 平台，指定tag和指定通知的title，
-	 * 
-	 * @return
-	 */
-
-	public static PushPayload buildPushObject_android_tag_alertWithTitle(
-			String alert, String title, Map<String, String> extras,
-			String... tagValue) {
-		return PushPayload.newBuilder().setPlatform(Platform.android())
-				.setAudience(Audience.tag(tagValue))
-				.setNotification(Notification.android(alert, title, extras))
+	
+	public static PushPayload buildPushObject_android_ios_audience_More_messageWithExtras(String[] alias,String title, 
+			String msgContent,
+			String contentType,Map<String,String> extraMap) {
+		
+		return PushPayload
+				.newBuilder()
+				.setPlatform(Platform.android_ios())
+				.setOptions(Options.newBuilder().setTimeToLive(864000).build())//设置为把保存10天
+				.setAudience(
+						Audience.newBuilder()
+								.addAudienceTarget(AudienceTarget.alias(alias))
+								.build())				
+				.setMessage(
+						Message.newBuilder()
+						.setTitle(title)
+						.setMsgContent(msgContent)
+						.setContentType(contentType)						
+						.addExtras(extraMap).build())
 				.build();
+		
 	}
 
-	// /**
-	// * 指定android 和ios平台
-	// *
-	// * @return
-	// */
+	/**
+	 * 发送推送消息
+	 * @param payload
+	 * @throws APIRequestException 
+	 * @throws APIConnectionException 
+	 */
+	public static PushResult sendPush(PushPayload payload) throws APIConnectionException, APIRequestException {
+		PushResult result=null;
+		result = JPushUtil.getInstant().client.sendPush(payload);	
+		return result;
+	}
+
+	// // 閫氱煡
+	// public static PushPayload buildPushObject_all_alias_alert() {
+	// return PushPayload.newBuilder().setPlatform(Platform.all())
+	// .setAudience(Audience.alias("alias1"))
+	// .setNotification(Notification.alert(ALERT)).build();
+	// }
+	//
+	// public static PushPayload buildPushObject_android_tag_alertWithTitle() {
+	// return PushPayload.newBuilder().setPlatform(Platform.android())
+	// .setAudience(Audience.tag("tag1"))
+	// .setNotification(Notification.android(ALERT, TITLE, null))
+	// .build();
+	// }
+	//
+	// // 閫氱煡
 	// public static PushPayload buildPushObject_android_and_ios() {
 	// return PushPayload
 	// .newBuilder()
@@ -176,6 +137,7 @@ public class JPushUtil {
 	// .build()).build();
 	// }
 	//
+	// // 鍙戦�娑堟伅
 	// public static PushPayload
 	// buildPushObject_ios_tagAnd_alertWithExtrasAndMessage() {
 	// return PushPayload
@@ -197,6 +159,11 @@ public class JPushUtil {
 	// .build();
 	// }
 	//
+	// /**
+	// * ios
+	// *
+	// * @return
+	// */
 	// public static PushPayload
 	// buildPushObject_ios_audienceMore_messageWithExtras() {
 	// return PushPayload

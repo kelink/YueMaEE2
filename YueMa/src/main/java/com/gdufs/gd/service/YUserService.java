@@ -12,4 +12,7 @@ public interface YUserService {
 	public YUser getUserById(int id);
 	
 	public YUser getUserByPhone(String phoneNum);
+	
+	public boolean updateUser(YUser user);
+	
 }

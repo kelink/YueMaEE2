@@ -8,7 +8,10 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.gdufs.gd.dao.YContactDao;
+import com.gdufs.gd.dao.YRelationSecondDao;
 import com.gdufs.gd.entity.YContact;
+import com.gdufs.gd.entity.YRelationSecond;
+import com.gdufs.gd.entity.YUser;
 import com.gdufs.gd.service.YContactService;
 
 @Service(value = "contactService")
@@ -16,6 +19,9 @@ public class YContactServiceImpl implements YContactService {
 
 	@Resource(name = "contactDao")
 	private YContactDao contactDao;
+	
+	@Resource(name = "relationSecondDao")
+	private YRelationSecondDao relationSecondDao;
 
 	@Override
 	public boolean addAContact(YContact contactObj) {
@@ -66,8 +72,38 @@ public class YContactServiceImpl implements YContactService {
 	 * 更新获取一度人脉关系
 	 */
 	@Override
-	public List<YContact> getFirstContacts(String phoneNum) {
+	public List<YContact> getFirstPeople(String phoneNum) {
 		return contactDao.getFirstContact(phoneNum);
 	}
+	/**
+	 * 获取二度人脉关系
+	 */
+	@Override
+	public List<YUser> getSecondPeople(String phoneNum) {
+		return relationSecondDao.getSecondPeople(phoneNum);
+	}
 
+	@Override
+	public YContact getContactByPhoneNum(String hostNum, String friendNum) {
+		return contactDao.getContactByPhoneNum(hostNum,friendNum);
+	}
+
+	@Override
+	public boolean isFirstFriend(String hostNum, String friendNum) {
+		return contactDao.isFirstFriend(hostNum, friendNum);
+	}
+
+	@Override
+	public boolean isSecondFriend(String hostNum, String friendNum) {
+		return relationSecondDao.isSecondFrined(hostNum, friendNum);
+	}
+
+	@Override
+	public boolean addFriends(YContact friend1, YContact friend2) {
+		ArrayList<YContact> list = new ArrayList<YContact>();
+		list.add(friend1);
+		list.add(friend2);
+		return contactDao.addContacts(list);
+	}
+	
 }

@@ -20,7 +20,7 @@ public interface YActivityUserService {
 	 * @param activityUser
 	 * @return
 	 */
-	public boolean quitActivity(int activityId, int uId);
+	public boolean quitActivity(int activityId, int userId);
 	
 	/**
 	 *  获取用户参加或者创建的活动信息 
@@ -28,4 +28,13 @@ public interface YActivityUserService {
 	 * @return
 	 */
 	public List<YActivityUser> getUserJoinOrCreate(int uId);
+	
+	/**
+	 *  用户参与或者创建的活动个数
+	 * @param uId
+	 * @return
+	 */
+	public int countJoinOrCreate(int uId);
+	
+	public int countJoinOrCreateByPhone(String phoneNum);
 }

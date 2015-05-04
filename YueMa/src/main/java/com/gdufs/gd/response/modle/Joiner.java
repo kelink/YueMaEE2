@@ -14,12 +14,20 @@ public class Joiner extends BaseEntity {
 	public static final String COL_ID = "id";
 	public static final String COL_ACTIVITY_ID = "activityId";
 	public static final String COL_USER_ID = "uId";
+	public static final String COL_JOINER_USERNAME = "joinerUserName";
 	public static final String COL_JOINER_FACEPATH = "joineFacePath";
+	public static final String COL_JOINER_JOIN_TIME = "joinTime";
+	public static final String COL_JOINER_INTRODUCE = "introduce";
+	public static final String COL_JOINER_PHONE_NUM = "joinerPhoneNum";
 
 	private String id;
 	private String activityId;
 	private String uId;
 	private String joineFacePath;
+	private String joinerUserName;// 姓名
+	private String joinTime;// 加入的时间
+	private String introduce;// 简介
+	private String joinerPhoneNum;// 电话号码
 
 	public String getId() {
 		return id;
@@ -31,6 +39,14 @@ public class Joiner extends BaseEntity {
 
 	public String getActivityId() {
 		return activityId;
+	}
+
+	public String getJoinerUserName() {
+		return joinerUserName;
+	}
+
+	public void setJoinerUserName(String joinerUserName) {
+		this.joinerUserName = joinerUserName;
 	}
 
 	public void setActivityId(String activityId) {
@@ -53,10 +69,36 @@ public class Joiner extends BaseEntity {
 		this.joineFacePath = joineFacePath;
 	}
 
+	public String getJoinTime() {
+		return joinTime;
+	}
+
+	public void setJoinTime(String joinTime) {
+		this.joinTime = joinTime;
+	}
+
+	public String getIntroduce() {
+		return introduce;
+	}
+
+	public void setIntroduce(String introduce) {
+		this.introduce = introduce;
+	}
+
+	public String getJoinerPhoneNum() {
+		return joinerPhoneNum;
+	}
+
+	public void setJoinerPhoneNum(String joinerPhoneNum) {
+		this.joinerPhoneNum = joinerPhoneNum;
+	}
+
 	@Override
 	public String toString() {
 		return "Joiner [id=" + id + ", activityId=" + activityId + ", uId="
-				+ uId + ", joineFacePath=" + joineFacePath + "]";
+				+ uId + ", joineFacePath=" + joineFacePath
+				+ ", joinerUserName=" + joinerUserName + ", joinTime="
+				+ joinTime + ", introduce=" + introduce + ", joinerPhoneNum="
+				+ joinerPhoneNum + "]";
 	}
-
 }

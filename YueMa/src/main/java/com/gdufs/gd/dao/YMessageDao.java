@@ -1,7 +1,9 @@
 package com.gdufs.gd.dao;
 
 import java.util.List;
+
 import com.gdufs.gd.entity.YMessage;
+import com.gdufs.gd.entity.YMessageUser;
 
 public interface YMessageDao {
 	public boolean add(YMessage message);

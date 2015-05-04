@@ -141,7 +141,7 @@ public class UploadUtil {
           .getRealPath("");  
       System.out.println(ctxPath);
       
-      //获取下载文件露肩
+      //获取下载文件
       String downLoadPath = ctxPath+"/apk/"+ storeName;  
     
       //获取文件的长度

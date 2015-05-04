@@ -88,7 +88,6 @@ public class CommentController {
 			comment.setFatherCommentId(0);
 			comment.setIsDelete(0);
 			if (commentService.add(comment)) {
-
 				message.setCode(C.ResponseCode.SUCCESS);
 				message.setMessage(C.ResponseMessage.SUCCESS);
 				message.setResultMap(null);
@@ -114,7 +113,7 @@ public class CommentController {
 	public String deleteComment(
 			final HttpServletRequest request,
 			final HttpServletResponse response,
-			@RequestParam(value = C.ParamsName.COMMENT_ID, required = true, defaultValue = "0") int commentId) {
+			@RequestParam(value = C.ParamsName.CID, required = true, defaultValue = "0") int commentId) {
 		TransferMessage message = new TransferMessage();
 		if (commentId == 0) {
 			message.setCode(C.ResponseCode.ERROR);

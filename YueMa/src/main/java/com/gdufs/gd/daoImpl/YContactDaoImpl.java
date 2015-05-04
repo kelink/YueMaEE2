@@ -92,5 +92,30 @@ public class YContactDaoImpl extends BaseDao implements YContactDao {
 		return  query.list();
 	}
 
+	@Override
+	public YContact getContactByPhoneNum(String hostNum,String friendNum) {
+		Session session = this.getSession();
+		String hql = "from YContact where hostNum=? and friendNum=?";
+		Query query = session.createQuery(hql);
+		query.setParameter(0, hostNum);
+		query.setParameter(1, friendNum);
+		return  (YContact) query.uniqueResult();
+	}
+
+	@Override
+	public boolean isFirstFriend(String hostNum, String friendNum) {
+		Session session = this.getSession();
+		String hql = "Select count(*) from YContact contact where contact.hostNum=? and contact.friendNum=?";
+		Query query = session.createQuery(hql);
+		query.setParameter(0, hostNum);
+		query.setParameter(1, friendNum);
+		Object object=query.uniqueResult();
+		int num=Integer.parseInt(object.toString());
+		if (num>0) {
+			return true;
+		}
+		return false;
+	}
+
 
 }

@@ -13,6 +13,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 public class BaseDao {
 	public BaseDao() {
@@ -21,9 +22,10 @@ public class BaseDao {
 
 	@Resource(name = "sessionFactory")
 	protected SessionFactory sessionFactory;
-
+	
 	public Session getSession() {
-		return this.sessionFactory.getCurrentSession();
+		//return this.sessionFactory.getCurrentSession();//需要考虑
+		return sessionFactory.openSession();
 	}
 
 	public void setSessionFactory(SessionFactory sessionFactory) {

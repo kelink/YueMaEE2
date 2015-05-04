@@ -1,0 +1,25 @@
+@charset "utf-8";
+/* CSS Document */
+*{margin:0; padding:0;}
+body{overflow:hidden;background-color:#0C9;}
+
+.left{float:left; height:100%; width:60%;}
+.left .main{float:left; z-index:1; margin:110px 0px 130px 260px;}
+.left .main .title{margin:0 0 30px 0; float:left;}
+.left .main .title img{width:200px; height:200px; float:left;}
+.left .main .title span{font-size:80px; font-family:幼圆;margin:40px 20px 0px 30px; float: left; color:#FFF;}
+.left .main .text{font-size:20px; color:#FFF; float:left;}
+.left .main .text ul{text-decoration:none; list-style-type:disc; line-height:30px; margin:10px 0 0 30px;}
+.left .main .text ul li{text-decoration:none; line-height:50px; font-family:Microsoft YaHei;}
+
+
+
+.right{float:right;  height:100%; width:40%;}
+.right .code-area{height:400px; float:left; z-index:1; margin:120px 0px;}
+.right .code-area p{font-size:16px; color:#333; font-family:Microsoft YaHei; text-height:24px; margin:20px 18px 0 34px; color:#FFF;}
+.right .code-area .code{ margin:30px; background-color:#FFF; height:280px}
+.right .code-area .code img{height:180px; width:180px; margin:30px 26px 6px 26px;}
+.right .code-area .code p{font-size:14px; color:#666; font-family:Microsoft YaHei; text-height:18px; margin:0px 18px 0 54px;}
+
+footer{ position:absolute; bottom:0; width:100%; background-color:#333; padding:30px;}
+footer p{margin:0 auto; color:#FFF; font-family:Microsoft YaHei; font-size:14px;}

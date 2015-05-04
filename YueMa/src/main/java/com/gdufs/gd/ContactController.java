@@ -1,6 +1,7 @@
 package com.gdufs.gd;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,8 +18,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.gdufs.gd.common.C;
 import com.gdufs.gd.entity.TransferMessage;
 import com.gdufs.gd.entity.YContact;
+import com.gdufs.gd.entity.YMessage;
+import com.gdufs.gd.entity.YMessageUser;
+import com.gdufs.gd.entity.YUser;
 import com.gdufs.gd.response.modle.FriendsActivityObj;
+import com.gdufs.gd.response.modle.User;
+import com.gdufs.gd.service.JPushServie;
 import com.gdufs.gd.service.YContactService;
+import com.gdufs.gd.service.YMessageService;
+import com.gdufs.gd.service.YUserService;
 import com.gdufs.gd.util.JacksonUtil;
 
 @Controller
@@ -30,6 +38,17 @@ public class ContactController {
 	@Resource(name = "contactService")
 	private YContactService contactService;
 
+	@Resource(name = "userService")
+	private YUserService userService;
+	
+
+	@Resource(name = "messageService")
+	private YMessageService messageService;
+	
+	
+	@Resource(name = "jPushServie")
+	private JPushServie jPushServie;
+	
 	/**
 	 * 添加通讯录 （发生更改时候需要更新一度和二度人脉关系表）
 	 * 
@@ -65,9 +84,12 @@ public class ContactController {
 				contactList.add(contact);
 			}
 			if (contactService.addContactList(contactList)) {
+				List<YContact> contacts=contactService.getFirstPeople(phoneNum);
+				HashMap<String,List<YContact>>  resultMap=new HashMap<String,List<YContact>>();
+				resultMap.put("result", contacts);
 				messageObj.setCode(C.ResponseCode.SUCCESS);
 				messageObj.setMessage(C.ResponseMessage.SUCCESS);
-				messageObj.setResultMap(null);
+				messageObj.setResultMap(resultMap);
 				logger.info("add contact success");
 			} else {
 				messageObj.setCode(C.ResponseCode.ERROR);
@@ -91,7 +113,7 @@ public class ContactController {
 				messageObj.setMessage(C.ResponseMessage.REQUEST_ERROR);
 				messageObj.setResultMap(null);
 			}else {
-				List<YContact> contacts=contactService.getFirstContacts(phoneNum);
+				List<YContact> contacts=contactService.getFirstPeople(phoneNum);
 				HashMap<String,List<YContact>>  resultMap=new HashMap<String,List<YContact>>();
 				resultMap.put("result", contacts);
 				messageObj.setCode(C.ResponseCode.SUCCESS);
@@ -113,36 +135,93 @@ public class ContactController {
 				messageObj.setMessage(C.ResponseMessage.REQUEST_ERROR);
 				messageObj.setResultMap(null);
 			}else {
-//				List<YContact> contacts=contactService.getFirstContacts(phoneNum);
-//				HashMap<String,List<YContact>>  resultMap=new HashMap<String,List<YContact>>();
-//				resultMap.put("result", contacts);
-//				messageObj.setCode(C.ResponseCode.SUCCESS);
-//				messageObj.setMessage(C.ResponseMessage.SUCCESS);
-//				messageObj.setResultMap(resultMap);
+				List<YUser> contacts=contactService.getSecondPeople(phoneNum);
+				HashMap<String,List<User>>  resultMap=new HashMap<String,List<User>>();
+				ArrayList<User> returnList=new ArrayList<User>();
+				for (YUser yUser : contacts) {
+					User user=new User();
+					user.setFacePath(yUser.getFacePath());
+					user.setGender(yUser.getGender());
+					user.setId(yUser.getId());
+					user.setIntroduce(yUser.getIntroduce());
+					user.setOrigin(yUser.getOrigin());
+					user.setPhoneNum(yUser.getPhoneNum());
+					user.setUsername(yUser.getUserName());
+					returnList.add(user);
+				}
+				
+				resultMap.put("result", returnList);
+				messageObj.setCode(C.ResponseCode.SUCCESS);
+				messageObj.setMessage(C.ResponseMessage.SUCCESS);
+				messageObj.setResultMap(resultMap);
 			}
 			return JacksonUtil.writeEntity2JSON(messageObj);
 	 }
+	 
+	 /**
+	  * 新添加好友
+	  * @param phoneNum
+	  * @param friendNum
+	  * @return
+	  */
+	 @RequestMapping(value = "/addUser",method = {RequestMethod.GET,RequestMethod.POST})  
+	 @ResponseBody
+	 private String addUser(@RequestParam(value =C.ParamsName.HOST_NUM,defaultValue="") String hostNum,
+			 @RequestParam(value =C.ParamsName.FRIEND_NUM,defaultValue="") String friendNum){
+	 
+			TransferMessage messageObj = new TransferMessage();
+			if(hostNum.equals("")||friendNum.equals("")){
+				messageObj.setCode(C.ResponseCode.ERROR);
+				messageObj.setMessage(C.ResponseMessage.ERROR);
+				messageObj.setResultMap(null);
+			}else {
+				YContact friend1=new YContact();
+				friend1.setHostNum(hostNum);
+				friend1.setFriendNum(friendNum);
+				friend1.setVersion(0);
+				friend1.setIsSysUser(1);
+				
+				YContact friend2=new YContact();
+				friend2.setHostNum(friendNum);
+				friend2.setFriendNum(hostNum);
+				friend2.setVersion(0);
+				friend2.setIsSysUser(1);			
 
-	/**
-	 * 更新通信录
-	 */
-//	 @RequestMapping(value = "/updateContact",method = {RequestMethod.GET,RequestMethod.POST})  
-//	 @ResponseBody
-//	public String updateContact(
-//			@RequestParam(value = "contacts", defaultValue = "") List<YContact> contactList) {
-//		TransferMessage messageObj = new TransferMessage();
-//		if (contactService.addContactList(contactList) == true) {
-//			messageObj.setCode(C.ResponseCode.SUCCESS);
-//			messageObj.setMessage(C.ResponseMessage.SUCCESS);
-//			messageObj.setResultMap(null);
-//			logger.info("update contact success");
-//		} else {
-//			messageObj.setCode(C.ResponseCode.ERROR);
-//			messageObj.setMessage(C.ResponseMessage.SUCCESS);
-//			messageObj.setResultMap(null);
-//			logger.error("update contact fail");
-//		}
-//		return JacksonUtil.writeEntity2JSON(messageObj);
-//	}
+				if (contactService.addFriends(friend1, friend2)) {					
+					messageObj.setCode(C.ResponseCode.SUCCESS);
+					messageObj.setMessage(C.ResponseMessage.SUCCESS);
+					messageObj.setResultMap(null);
+					
+					//插入回复消息
+					// 消息实体
+					YMessage newMessage = new YMessage();
+					newMessage.setTitle("通过验证");//等待添加
+					newMessage.setContent("我通过你的好友验证，我们可以开始对话了");
+					newMessage.setCreateTime(new Date());
+					newMessage.setCreator(userService.getUserByPhone(hostNum));
+					newMessage.setType(C.DefaultValues.DEFAULT_MSG_TYPE_CHAT);// 4表示通过验证消息
+					// 消息发往者
+					YMessageUser messageUser = new YMessageUser();
+					YUser toUser = userService.getUserByPhone(friendNum);
+					messageUser.setIsRead(C.DefaultValues.DEFAULT_IS_READ);// 0表示没读
+					messageUser.setMessage(newMessage);
+					messageUser.setReadTime(null);
+					messageUser.setUser(toUser);
+					messageUser.setIsSend(C.DefaultValues.DEFAULT_IS_SEND);//0表示没有发送成功
+					newMessage.getMessageUser().add(messageUser);
+					YMessageUser returnMessageUser=messageService.addMsg(newMessage);
+					//发送给请求验证方
+					jPushServie.sendMessagee(returnMessageUser, new String[]{toUser.getPhoneNum()});//马上发送，有异常再说
+
+				} else {
+					messageObj.setCode(C.ResponseCode.ERROR);
+					messageObj.setMessage(C.ResponseMessage.ERROR);
+					messageObj.setResultMap(null);
+				}
+			}
+			return JacksonUtil.writeEntity2JSON(messageObj);
+	 }
+	 
+
 
 }

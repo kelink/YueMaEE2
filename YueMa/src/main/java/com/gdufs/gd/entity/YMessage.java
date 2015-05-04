@@ -1,6 +1,7 @@
 package com.gdufs.gd.entity;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -30,8 +31,9 @@ public class YMessage extends BaseEntity {
 	private YUser creator;//创建者
 	private String content;
 	private Date createTime;
-	private int type;
-	private Set<YMessageUser> messageUser;//表示发送的
+	private int type;//0表示系统消息，1表示验证消息,2表示评论消息
+	private String title;//标题
+	private Set<YMessageUser> messageUser=new HashSet<YMessageUser>();//表示发送的
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -91,6 +93,21 @@ public class YMessage extends BaseEntity {
 
 	public void setMessageUser(Set<YMessageUser> messageUser) {
 		this.messageUser = messageUser;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	@Override
+	public String toString() {
+		return "YMessage [id=" + id + ", creatorId=" + creator.getId() + ", content="
+				+ content + ", createTime=" + createTime + ", type=" + type
+				+ ", title=" + title  + "]";
 	}
 
 	@Override

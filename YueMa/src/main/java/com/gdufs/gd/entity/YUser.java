@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
@@ -30,13 +31,15 @@ public class YUser extends BaseEntity {
 	private Date createTime;
 	private Date lastLoginTimeDate;
 	private String lastLoginIp;
-	
+	private String gender;//性别
+	private String origin;//家乡
 	private Set<YActivity> activities;//创建的活动(多对一的关系，和activity双向)
 	private Set<YComment> comments=new HashSet<YComment>();//用户发出的关于活动的评论
 	private Set<YActivityUser> activityUsers=new HashSet<YActivityUser>();//参与关系，表示参与的活动
 	private Set<YBulletinUser> bulletinUsers=new HashSet<YBulletinUser>();//发给该用户的公告
 	private Set<YMessageUser> messageUsers=new HashSet<YMessageUser>();//发给该用户的信息
 	private Set<YRemindUser> remindUsers=new HashSet<YRemindUser>();//发给该用户的提醒
+	private int isLogin;//登陆状态
 	
 
 	@Id
@@ -104,6 +107,24 @@ public class YUser extends BaseEntity {
 		this.userName = userName;
 	}
 
+	
+	@Column(name = "gender", length = 20, nullable = true)
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	@Column(name = "origin", length = 20, nullable = true)
+	public String getOrigin() {
+		return origin;
+	}
+
+	public void setOrigin(String origin) {
+		this.origin = origin;
+	}
+
 	@Column(length = 13, nullable = false)
 	public String getPhoneNum() {
 		return phoneNum;
@@ -121,8 +142,8 @@ public class YUser extends BaseEntity {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	@Column(length = 50)
+	@Type(type = "text")
+	@Column(length = 50,nullable=true)
 	public String getFacePath() {
 		return facePath;
 	}
@@ -158,6 +179,15 @@ public class YUser extends BaseEntity {
 
 	public void setLastLoginTimeDate(Date lastLoginTimeDate) {
 		this.lastLoginTimeDate = lastLoginTimeDate;
+	}
+	
+	@Column(name="isLogin",length = 11,nullable=false,columnDefinition="INT default 0")
+	public int getIsLogin() {
+		return isLogin;
+	}
+
+	public void setIsLogin(int isLogin) {
+		this.isLogin = isLogin;
 	}
 
 	@Column(length = 50)

@@ -1,52 +1,29 @@
 package com.gdufs.gd;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.rmi.server.UID;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
-import javassist.expr.NewArray;
+
+
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.activemq.store.jdbc.adapter.TransactDatabaseLocker;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.rossillo.spring.web.mvc.CacheControl;
+import net.rossillo.spring.web.mvc.CachePolicy;
+
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.gdufs.gd.common.C;
-import com.gdufs.gd.common.CActivity;
 import com.gdufs.gd.entity.TransferMessage;
 import com.gdufs.gd.entity.YActivity;
 import com.gdufs.gd.entity.YActivityUser;
@@ -133,7 +110,6 @@ public class ActivityController {
 		activity.setContactPhone(contactPhone);
 		activity.setCategory(category);
 		activity.setPicturePath(picturePath);
-		activity.setLikeNum(0);
 		// 参与者
 		YActivityUser activityUser = new YActivityUser();
 		activityUser.setActivity(activity);
@@ -158,7 +134,7 @@ public class ActivityController {
 	}
 
 	
-	// 获取圈子的活动支持分页，全部获取)
+	// 获取圈子的活动支持分页，全部获
 	@RequestMapping(value = "/getFriendsActivityMsg", method = {RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
 	public String getFriendsMsg(
@@ -198,7 +174,7 @@ public class ActivityController {
 				friendsActivityObj.setTitle(activity.getTitle());
 				friendsActivityObj.setIntroduce(activity.getIntroduce());
 				friendsActivityObj.setCommentNum(String.valueOf(activity.getComments().size()));
-				friendsActivityObj.setLikeNum(String.valueOf(activity.getLikeNum()));//需要修改修改，先测试
+				friendsActivityObj.setLikeNum(String.valueOf(activity.getLikes().size()));//需要修改修改，先测试
 				friendsActivityObj.setCategory(activity.getCategory());
 				friendsActivityObj.setActivityAddress(activity.getActivityAddress());
 				friendsActivityObj.setActivityAddressLatitude(activity.getActivityAddressLatitude());
@@ -212,6 +188,10 @@ public class ActivityController {
 					joiner2.setActivityId(String.valueOf(activity.getId()));
 					joiner2.setJoineFacePath(joiner.getUser().getFacePath());
 					joiner2.setuId(String.valueOf(joiner.getUser().getId()));
+					joiner2.setJoinerUserName(joiner.getUser().getUserName());
+					joiner2.setIntroduce(joiner.getUser().getIntroduce());
+					joiner2.setJoinerPhoneNum(joiner.getUser().getPhoneNum());
+					joiner2.setJoinTime(DateUtil.formatDateTime(joiner.getJoin_time()));
 					joinerList.add(joiner2);
 				}
 				friendsActivityObj.setJoinerList(joinerList);
@@ -305,61 +285,58 @@ public class ActivityController {
 		}else {
 			YActivity yactivity=activityService.getActivityByActivityId(activityId);
 			System.out.println(yactivity.getActivityUsers().toString());
-			if (yactivity!=null) {				
-				Activity tempActivity=new Activity();
-				tempActivity.setId(String.valueOf(yactivity.getId()));
-				tempActivity.setActivityId(String.valueOf(yactivity.getId()));
-				tempActivity.setCreatorId(String.valueOf(yactivity.getCreator().getId()));
-				tempActivity.setCreator_userName(yactivity.getCreator().getUserName());
-				tempActivity.setCreator_facePath(yactivity.getCreator().getFacePath());
-				tempActivity.setCreator_phoneNum(yactivity.getCreator().getPhoneNum());
-				tempActivity.setCreateTimeDate(DateUtil.formatDateTime(yactivity.getCreateTimeDate()));
-				tempActivity.setPicturePath(yactivity.getPicturePath());
-				tempActivity.setTitle(yactivity.getTitle());
-				tempActivity.setIntroduce(yactivity.getIntroduce());
-				tempActivity.setCategory(yactivity.getCategory());
-				tempActivity.setCost(String.valueOf(yactivity.getCost()));
-				tempActivity.setCount(String.valueOf(yactivity.getCount()));
-				tempActivity.setActivityAddress(yactivity.getActivityAddress());
-				tempActivity.setActivityAddressLatitude(yactivity.getActivityAddressLatitude());
-				tempActivity.setActivityAddressLongitude(yactivity.getActivityAddressLongitude());
-				tempActivity.setCommentNum(String.valueOf(yactivity.getComments().size()));
-				tempActivity.setBeginTime(DateUtil.formatDateTime(yactivity.getBeginTime()));
-				tempActivity.setEndTime(DateUtil.formatDateTime(yactivity.getEndTime()));
-				ArrayList<Comment> commentsList=new ArrayList<Comment>();
-				for (YComment comment : yactivity.getComments()) {
-					if (comment.getIsDelete()!=1) {
-						Comment tempComment=new Comment();
-						tempComment.setCommentPath(comment.getCommentPath());
-						tempComment.setContent(comment.getContent());
-						tempComment.setFatherCommentId(String.valueOf(comment.getFatherCommentId()));
-						tempComment.setID(String.valueOf(comment.getId()));
-						tempComment.setIsDelete(String.valueOf(comment.getIsDelete()));
-						commentsList.add(tempComment);
-					}		
-					
-				}
-				tempActivity.setCommentsList(commentsList);
-				//设置Joiner
-				ArrayList<Joiner> joinerList=new ArrayList<Joiner>();
-				for (YActivityUser joiner : yactivity.getActivityUsers()) {
-					Joiner	joiner2=new Joiner();
-					joiner2.setActivityId(String.valueOf(yactivity.getId()));
-					joiner2.setJoineFacePath(joiner.getUser().getFacePath());
-					joiner2.setuId(String.valueOf(joiner.getUser().getId()));
-					joinerList.add(joiner2);
-				}
-				tempActivity.setJoinerList(joinerList);			
-				HashMap<String,Activity>  resultMap=new HashMap<String,Activity>();
-				resultMap.put("result", tempActivity);
-				message.setCode(C.ResponseCode.SUCCESS);
-				message.setMessage(C.ResponseMessage.SUCCESS);
-				message.setResultMap(resultMap);
-			}else {
-				message.setCode(C.ResponseCode.ERROR);
-				message.setMessage(C.ResponseMessage.ERROR);
-				message.setResultMap(null);
+			Activity tempActivity=new Activity();
+			tempActivity.setId(String.valueOf(yactivity.getId()));
+			tempActivity.setActivityId(String.valueOf(yactivity.getId()));
+			tempActivity.setCreatorId(String.valueOf(yactivity.getCreator().getId()));
+			tempActivity.setCreator_userName(yactivity.getCreator().getUserName());
+			tempActivity.setCreator_facePath(yactivity.getCreator().getFacePath());
+			tempActivity.setCreator_phoneNum(yactivity.getCreator().getPhoneNum());
+			tempActivity.setCreateTimeDate(DateUtil.formatDateTime(yactivity.getCreateTimeDate()));
+			tempActivity.setPicturePath(yactivity.getPicturePath());
+			tempActivity.setTitle(yactivity.getTitle());
+			tempActivity.setIntroduce(yactivity.getIntroduce());
+			tempActivity.setCategory(yactivity.getCategory());
+			tempActivity.setCost(String.valueOf(yactivity.getCost()));
+			tempActivity.setCount(String.valueOf(yactivity.getCount()));
+			tempActivity.setActivityAddress(yactivity.getActivityAddress());
+			tempActivity.setActivityAddressLatitude(yactivity.getActivityAddressLatitude());
+			tempActivity.setActivityAddressLongitude(yactivity.getActivityAddressLongitude());
+			tempActivity.setCommentNum(String.valueOf(yactivity.getComments().size()));
+			tempActivity.setBeginTime(DateUtil.formatDateTime(yactivity.getBeginTime()));
+			tempActivity.setEndTime(DateUtil.formatDateTime(yactivity.getEndTime()));
+			ArrayList<Comment> commentsList=new ArrayList<Comment>();
+			for (YComment comment : yactivity.getComments()) {
+				if (comment.getIsDelete()!=1) {
+					Comment tempComment=new Comment();
+					tempComment.setCommentPath(comment.getCommentPath());
+					tempComment.setContent(comment.getContent());
+					tempComment.setFatherCommentId(String.valueOf(comment.getFatherCommentId()));
+					tempComment.setID(String.valueOf(comment.getId()));
+					tempComment.setIsDelete(String.valueOf(comment.getIsDelete()));
+					commentsList.add(tempComment);
+				}		
+				
 			}
+			tempActivity.setCommentsList(commentsList);
+			//设置Joiner
+			ArrayList<Joiner> joinerList=new ArrayList<Joiner>();
+			for (YActivityUser joiner : yactivity.getActivityUsers()) {
+				Joiner	joiner2=new Joiner();
+				joiner2.setActivityId(String.valueOf(yactivity.getId()));
+				joiner2.setJoineFacePath(joiner.getUser().getFacePath());
+				joiner2.setuId(String.valueOf(joiner.getUser().getId()));
+				joiner2.setIntroduce(joiner.getUser().getIntroduce());
+				joiner2.setJoinerPhoneNum(joiner.getUser().getPhoneNum());
+				joiner2.setJoinTime(DateUtil.formatDateTime(joiner.getJoin_time()));
+				joinerList.add(joiner2);
+			}
+			tempActivity.setJoinerList(joinerList);			
+			HashMap<String,Activity>  resultMap=new HashMap<String,Activity>();
+			resultMap.put("result", tempActivity);
+			message.setCode(C.ResponseCode.SUCCESS);
+			message.setMessage(C.ResponseMessage.SUCCESS);
+			message.setResultMap(resultMap);
 		}
 		return JacksonUtil.writeEntity2JSON(message);
 	}
@@ -390,7 +367,7 @@ public class ActivityController {
 	@RequestMapping(value = "/deleteActivity", method ={ RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
 	public String deleteActivity(final HttpServletRequest request,
-			@RequestParam("activityId") int activityId,
+			@RequestParam(value=C.ParamsName.AID, defaultValue = "0") int activityId,
 			final HttpSession session) {
 		TransferMessage message = new TransferMessage();
 		if (activityId==0) {
@@ -415,18 +392,52 @@ public class ActivityController {
 	// 参与活动
 	@RequestMapping(value = "/joinActivity",  method ={ RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
-	public String joinActivity(@RequestParam("uId") int uId,
-			@RequestParam("activityId") int activityId) {
-		boolean isJoin = activityUserService.joinActivity(uId, activityId);
-		return "";
+	public String joinActivity(@RequestParam(value=C.ParamsName.UID, required = true, defaultValue = "0") int userId,
+			@RequestParam(value=C.ParamsName.AID, required = true, defaultValue = "0") int activityId) {
+		TransferMessage message = new TransferMessage();
+		System.out.println("userId---->"+userId);
+		System.out.println("activityId---->"+activityId);
+		if (activityId==0||userId==0) {
+			message.setCode(C.ResponseCode.ERROR);
+			message.setMessage(C.ResponseMessage.ERROR);
+			message.setResultMap(null);
+		}else {
+			if (activityUserService.joinActivity(activityId,userId)) {			
+				message.setCode(C.ResponseCode.SUCCESS);
+				message.setMessage(C.ResponseMessage.SUCCESS);
+				message.setResultMap(null);
+			}else {
+				message.setCode(C.ResponseCode.ERROR);
+				message.setMessage(C.ResponseMessage.ERROR);
+				message.setResultMap(null);
+			}
+		}
+		return JacksonUtil.writeEntity2JSON(message);
 	}
 
 	// 退出活动
 	@RequestMapping(value = "/quitActivity", method ={ RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
-	public String quitActivity(@RequestParam("uId") int uId,
-			@RequestParam("activityId") int activityId) {
-		boolean isQuit = activityUserService.quitActivity(uId, activityId);
-		return "";
+	public String quitActivity(@RequestParam(value=C.ParamsName.UID, required = true, defaultValue = "0") int userId,
+			@RequestParam(value=C.ParamsName.AID, required = true, defaultValue = "0") int activityId) {
+		System.out.println("userId---->"+userId);
+		System.out.println("activityId---->"+activityId);
+		TransferMessage message = new TransferMessage();
+		if (activityId==0||userId==0) {
+			message.setCode(C.ResponseCode.ERROR);
+			message.setMessage(C.ResponseMessage.ERROR);
+			message.setResultMap(null);
+		}else {
+			if (activityUserService.quitActivity(activityId,userId)) {			
+				message.setCode(C.ResponseCode.SUCCESS);
+				message.setMessage(C.ResponseMessage.SUCCESS);
+				message.setResultMap(null);
+			}else {
+				message.setCode(C.ResponseCode.ERROR);
+				message.setMessage(C.ResponseMessage.ERROR);
+				message.setResultMap(null);
+			}
+		}
+		return JacksonUtil.writeEntity2JSON(message);
 	}
 }

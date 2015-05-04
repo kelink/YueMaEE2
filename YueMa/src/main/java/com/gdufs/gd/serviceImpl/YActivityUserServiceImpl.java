@@ -48,12 +48,13 @@ public class YActivityUserServiceImpl implements YActivityUserService {
 		activityUser.setIsAuth(1);// 默认为授权
 		activityUser.setIsTickOff(0);// 默认没有剔除
 		activityUser.setJoin_time(new Date());
+		activityUser.setType(1);//0表示新创建，1表示加入
 		return activityUserDao.add(activityUser);
 	}
 
 	@Override
-	public boolean quitActivity(int activityId, int uId) {
-		return activityUserDao.delete(activityUserDao.query(uId, activityId));
+	public boolean quitActivity(int activityId, int userId) {
+		return activityUserDao.delete(activityId,userId);
 	}
 
 	/**
@@ -62,6 +63,20 @@ public class YActivityUserServiceImpl implements YActivityUserService {
 	@Override
 	public List<YActivityUser> getUserJoinOrCreate(int uId) {	
 		return activityUserDao.getUserJoinOrCreate(uId);
+	}
+	
+	/**
+	 * 用户参与或者创建的活动个数
+	 * 
+	 */
+	@Override
+	public int countJoinOrCreate(int uId) {
+		return activityUserDao.countJoinOrCreate(uId);
+	}
+	
+	@Override
+	public int countJoinOrCreateByPhone(String phoneNum) {
+		return activityUserDao.countJoinOrCreateByPhone(phoneNum);
 	}
 
 }

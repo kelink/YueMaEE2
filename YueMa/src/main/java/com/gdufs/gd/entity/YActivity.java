@@ -40,13 +40,13 @@ public class YActivity implements Serializable {
 	private String activityAddressLongitude;// 经度
 	private String activityAddressLatitude;// 纬度
 	private int count;// 最多人数
-	private int likeNum;//赞的人数
 
 	private YUser creator;// 创建者
 	private Set<YActivityUser> activityUsers = new HashSet<YActivityUser>();// 参与者
 	private Set<YComment> comments = new HashSet<YComment>();// 活动的评论
 //	private Set<YLabel> labels = new HashSet<YLabel>();// 活动归属的标签
-//	private Set<YPicture> pictures = new HashSet<YPicture>();// 活动的全部图片
+//	private Set<YPicture> pictures = new HashSet<YPicture>();// 活动的全部图片	
+	private Set<YLike> likes=new HashSet<YLike>();
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -96,10 +96,21 @@ public class YActivity implements Serializable {
 //	public void setPictures(Set<YPicture> pictures) {
 //		this.pictures = pictures;
 //	}
+	
 
 	@Column(name = "title", length = 50, nullable = false)
 	public String getTitle() {
 		return title;
+	}
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = YLike.class)
+	@JoinColumn(name = "activityId")
+	public Set<YLike> getLikes() {
+		return likes;
+	}
+
+	public void setLikes(Set<YLike> likes) {
+		this.likes = likes;
 	}
 
 	public void setTitle(String title) {
@@ -238,14 +249,6 @@ public class YActivity implements Serializable {
 	public void setCategory(String category) {
 		this.category = category;
 	}
-	@Column(name = "likeNum", length = 11, nullable = false)
-	public int getLikeNum() {
-		return likeNum;
-	}
-
-	public void setLikeNum(int likeNum) {
-		this.likeNum = likeNum;
-	}
 
 	@Override
 	public int hashCode() {
@@ -280,8 +283,9 @@ public class YActivity implements Serializable {
 				+ ", activityAddress=" + activityAddress
 				+ ", activityAddressLongitude=" + activityAddressLongitude
 				+ ", activityAddressLatitude=" + activityAddressLatitude
-				+ ", count=" + count + ", likeNum=" + likeNum + "]";
+				+ ", count=" + count + "]";
 	}
+
 
 
 }

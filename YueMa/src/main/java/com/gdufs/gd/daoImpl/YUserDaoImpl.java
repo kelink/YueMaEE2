@@ -1,4 +1,6 @@
- package com.gdufs.gd.daoImpl;
+package com.gdufs.gd.daoImpl;
+
+import java.util.Date;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -39,17 +41,30 @@ public class YUserDaoImpl extends BaseDao implements YUserDao {
 
 	@Override
 	public boolean updateUser(YUser user) {
-		//需要重写
 		Session session = this.getSession();
-		Transaction tx = null;
+		Transaction tx = session.beginTransaction();
 		try {
-			tx = session.beginTransaction();
-			
-			
-			session.save(user);
-			session.flush();
+			String hql = "update YUser user set user.userName=?,phoneNum=?,password=?,"
+					+ "facePath=?,introduce=?,lastLoginTimeDate=?,lastLoginIp=?,gender=?,origin=?,isLogin=?where user.id=?";
+			Query query = session.createQuery(hql);
+			query.setParameter(0, user.getUserName());
+			query.setParameter(1, user.getPhoneNum());
+			query.setParameter(2, user.getPassword());
+			query.setParameter(3, user.getFacePath());
+			query.setParameter(4, user.getIntroduce());
+			query.setParameter(5, user.getLastLoginTimeDate());
+			query.setParameter(6, user.getLastLoginIp());
+			query.setParameter(7, user.getGender());
+			query.setParameter(8, user.getOrigin());
+			query.setParameter(9, user.getIsLogin());
+			query.setParameter(10, user.getId());
+			int ret = query.executeUpdate();
 			tx.commit();
-			return true;
+			if (ret > 0) {
+				return true;
+			} else {
+				return false;
+			}		
 		} catch (Exception ex) {
 			if (tx != null) {
 				tx.rollback();
@@ -87,12 +102,12 @@ public class YUserDaoImpl extends BaseDao implements YUserDao {
 	}
 
 	@Override
-	public YUser getUserByNameAndPwd(String phoneNum,String pwd) {
+	public YUser getUserByNameAndPwd(String phoneNum, String pwd) {
 		Session session = this.getSession();
 		String hql = "from YUser where phoneNum=? and password=?";
 		Query query = session.createQuery(hql);
 		query.setParameter(0, phoneNum);
 		query.setParameter(1, pwd);
-		return  (YUser) query.uniqueResult();		
+		return (YUser) query.uniqueResult();
 	}
 }

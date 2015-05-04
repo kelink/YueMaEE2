@@ -1,12 +1,9 @@
 package com.gdufs.gd.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
@@ -27,22 +24,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class YMessageUser extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
-	private int id;
 	private YUser user;
 	private YMessage message;
 	private int isRead;
 	private Date readTime;
+	private int isSend;//判断是否已经发送出去
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(length = 11, name = "id")
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	@Id
 	public YUser getUser() {
@@ -70,8 +57,17 @@ public class YMessageUser extends BaseEntity {
 	public void setIsRead(int isRead) {
 		this.isRead = isRead;
 	}
+	
+	@Column(name = "isSend", length = 11, nullable = true,columnDefinition="INT default 0")
+	public int getIsSend() {
+		return isSend;
+	}
 
-	@Column(name = "readTime", length = 11, nullable = false)
+	public void setIsSend(int isSend) {
+		this.isSend = isSend;
+	}
+
+	@Column(name = "readTime", length = 11, nullable = true)
 	@DateTimeFormat(pattern = "yyyy-mm-dd hh:mm:ss")
 	public Date getReadTime() {
 		return readTime;
@@ -83,9 +79,12 @@ public class YMessageUser extends BaseEntity {
 
 	@Override
 	public String toString() {
-		return "YMessageUser [id=" + id + ", userId=" + user.getId() + ", messageId="
-				+ message.getId() + ", isRead=" + isRead + ", readTime=" + readTime
-				+ "]";
+		return "YMessageUser [userId=" + user.getId() + ", messageId=" + message.getId()
+				+ ", isRead=" + isRead + ", readTime=" + readTime + ", isSend="
+				+ isSend + "]";
 	}
+
+
+
 
 }

@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  * 二度人脉表
@@ -14,7 +15,7 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "YRelationSecond")
+@Table(name = "YRelationSecond",uniqueConstraints = {@UniqueConstraint(columnNames={"hostNum","friendNum", "middle"})})
 public class YRelationSecond extends BaseEntity{
 
 	private static final long serialVersionUID = 1L;

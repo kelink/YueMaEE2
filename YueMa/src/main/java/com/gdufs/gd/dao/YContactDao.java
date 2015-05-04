@@ -25,4 +25,13 @@ public interface YContactDao {
 	 * @return
 	 */
 	public List<YContact> getFirstContact(String phoneNum);
+	
+	/**
+	 * 查找一度contact
+	 * @return
+	 */
+	public YContact getContactByPhoneNum(String hostNum,String friendNum);
+	
+	public boolean isFirstFriend(String hostNum,String friendNum);
+	
 }

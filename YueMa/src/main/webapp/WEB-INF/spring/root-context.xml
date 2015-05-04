@@ -1,88 +1,101 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"  
+    xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans     
+    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd    
+    http://www.springframework.org/schema/context     
+    http://www.springframework.org/schema/context/spring-context-3.2.xsd    
+    http://www.springframework.org/schema/aop    
+    http://www.springframework.org/schema/aop/spring-aop-3.2.xsd    
+    http://www.springframework.org/schema/tx    
+    http://www.springframework.org/schema/tx/spring-tx-3.2.xsd"> 
+     
 	<!-- Root Context: defines shared resources visible to all other web components -->
-	
+
 	<!-- 配置springMVC处理上传文件的信息 -->
-	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" >
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="defaultEncoding" value="utf-8"></property>
 		<property name="maxUploadSize" value="10485760000"></property>
 		<property name="maxInMemorySize" value="40960"></property>
 	</bean>
-	
+
 	<!-- 配置数据源 -->
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
 		<property name="url" value="jdbc:mysql://localhost/yuema2"></property>
 		<property name="username" value="root"></property>
 		<property name="password" value="luo"></property>
+
 	</bean>
-	
+
 	<!-- 配置SessionFactory -->
-	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
+
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
-				 <!-- 按照更新模式进行数据库操作，需要改表结构是才用上面
-				<prop key="hibernate.hbm2ddl.auto">create-drop</prop>
-				 --> 
+				<!-- 按照更新模式进行数据库操作，需要改表结构是才用上面 <prop key="hibernate.hbm2ddl.auto">create-drop</prop> -->
 				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.format_sql">true</prop>
 			</props>
 		</property>
-	
-		<!-- 注解domain类  -->
+
+		<!-- 注解domain类 -->
 		<property name="annotatedClasses">
 			<list>
-			  
 				<value>com.gdufs.gd.entity.YUser</value>
 				<value>com.gdufs.gd.entity.YActivity</value>
 				<value>com.gdufs.gd.entity.YActivityUserPK</value>
 				<value>com.gdufs.gd.entity.YActivityUser</value>
-				<value>com.gdufs.gd.entity.YContact</value>	
-				<value>com.gdufs.gd.entity.YRelationSecond</value>	
-				<value>com.gdufs.gd.entity.YBulletin</value>	
+				<value>com.gdufs.gd.entity.YContact</value>
+				<value>com.gdufs.gd.entity.YRelationSecond</value>
+				<value>com.gdufs.gd.entity.YBulletin</value>
 				<value>com.gdufs.gd.entity.YBulletinUser</value>
 				<value>com.gdufs.gd.entity.YComment</value>
 				<value>com.gdufs.gd.entity.YRemind</value>
-				<value>com.gdufs.gd.entity.YRemindUser</value>	
-				<value>com.gdufs.gd.entity.YRemindUserPK</value>	
+				<value>com.gdufs.gd.entity.YRemindUser</value>
+				<value>com.gdufs.gd.entity.YRemindUserPK</value>
 				<value>com.gdufs.gd.entity.YMessage</value>
-				<value>com.gdufs.gd.entity.YMessageUser</value>	
-				
-				<!--  	
-				<value>com.gdufs.gd.entity.YHistory</value>	
-				<value>com.gdufs.gd.entity.YLabel</value>	
-				<value>com.gdufs.gd.entity.YPicture</value>	
-				-->	
+				<value>com.gdufs.gd.entity.YMessageUser</value>
+				<value>com.gdufs.gd.entity.YLike</value>
+
+				<!-- <value>com.gdufs.gd.entity.YHistory</value> <value>com.gdufs.gd.entity.YLabel</value> 
+					<value>com.gdufs.gd.entity.YPicture</value> -->
 			</list>
 		</property>
-	</bean>  
-	<!-- 配置一个事务管理器 -->
-	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
-		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
-	
+	<!-- 配置一个事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
 	<!-- 配置事务，使用代理的方式 -->
-	<bean id="transactionProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" abstract="true">  
-	    <property name="transactionManager" ref="transactionManager"></property>  
-	    <property name="transactionAttributes">  
-	        <props>  
-	            <prop key="add*">PROPAGATION_REQUIRED,-Exception</prop>  
-	            <prop key="modify*">PROPAGATION_REQUIRED,-myException</prop>  
-	            <prop key="del*">PROPAGATION_REQUIRED</prop>  
-	            <prop key="*">PROPAGATION_REQUIRED</prop> 
-	            <prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>  
-                <prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>  
-                <prop key="load*">PROPAGATION_REQUIRED,readOnly</prop>  
-                <prop key="save*">PROPAGATION_REQUIRED</prop>  
-                <prop key="update*">PROPAGATION_REQUIRED</prop>  
-                <prop key="remove*">PROPAGATION_REQUIRED</prop>
-            </props>
-	    </property>  
-	</bean> 
+	<bean id="transactionProxy"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		abstract="true">
+		<property name="transactionManager" ref="transactionManager"></property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="add*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="modify*">PROPAGATION_REQUIRED,-myException</prop>
+				<prop key="del*">PROPAGATION_REQUIRED</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+				<prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="load*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="save*">PROPAGATION_REQUIRED</prop>
+				<prop key="update*">PROPAGATION_REQUIRED</prop>
+				<prop key="remove*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
 </beans>

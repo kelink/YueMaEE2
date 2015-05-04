@@ -52,12 +52,16 @@ public class YActivityUserDaoImpl extends BaseDao implements YActivityUserDao {
 	}
 
 	@Override
-	public boolean delete(YActivityUser activityUser) {
+	public boolean delete(int activityId, int userId) {
 		Session session = this.getSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
-			session.delete(activityUser);
+			String hql = "delete YActivityUser as activityUser where activityUser.activity.id=? and activityUser.user.id=?";
+			Query query = session.createQuery(hql);
+			query.setInteger(0, activityId);
+			query.setInteger(1, userId);
+			query.executeUpdate();
 			tx.commit();
 			return true;
 		} catch (Exception ex) {
@@ -99,6 +103,29 @@ public class YActivityUserDaoImpl extends BaseDao implements YActivityUserDao {
 		Query query = session.createQuery(hql);
 		query.setParameter(0, uId);
 		return query.list();
+	}
+	
+
+	@Override
+	public int countJoinOrCreate(int uId) {
+		Session session = this.getSession();
+		String hql = "select count(*) from YActivityUser activityUser where activityUser.user.id=? order by activityUser.join_time desc";
+		Query query = session.createQuery(hql);
+		query.setParameter(0, uId);
+		Object object=query.uniqueResult();
+		int num=Integer.parseInt(object.toString());
+		return num;
+	}
+
+	@Override
+	public int countJoinOrCreateByPhone(String phoneNum) {
+		Session session = this.getSession();
+		String hql = "select count(*) from YActivityUser activityUser where activityUser.user.phoneNum=? order by activityUser.join_time desc";
+		Query query = session.createQuery(hql);
+		query.setParameter(0, phoneNum);
+		Object object=query.uniqueResult();
+		int num=Integer.parseInt(object.toString());
+		return num;
 	}
 
 }
