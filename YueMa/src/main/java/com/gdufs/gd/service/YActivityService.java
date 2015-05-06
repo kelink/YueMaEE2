@@ -56,4 +56,6 @@ public interface YActivityService {
 			String phoneNum);
 	
 	public int countFriendActivity(String phoneNum);
+	
+	public boolean updateActivity(YActivity activity);
 }

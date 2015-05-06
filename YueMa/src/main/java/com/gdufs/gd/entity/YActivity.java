@@ -29,17 +29,20 @@ public class YActivity implements Serializable {
 	private String picturePath;// 活动的相片
 	private String category;// 活动的类别
 	private String creatorPhoneNum;// 创建者的电话(便于后面的关系更新)
-	private String contactPhone;// 活动联系电话
 	private String title;// 活动的title或者name
 	private String introduce;// 活动的简介
 	private Date createTimeDate = new Date();// 活动创建日期
 	private Date beginTime = new Date();// 活动开始时间
 	private Date endTime = new Date();// 活动结束时间
 	private double cost;// 活动预期花费每个人
-	private String activityAddress;// 活动地点
 	private String activityAddressLongitude;// 经度
 	private String activityAddressLatitude;// 纬度
 	private int count;// 最多人数
+	
+	private String contactPhoneNum;//联系电话
+	private String benifit;//活动好处
+	private String addressCity;//活动省市区
+	private String addressDetial;//活动的详细地址
 
 	private YUser creator;// 创建者
 	private Set<YActivityUser> activityUsers = new HashSet<YActivityUser>();// 参与者
@@ -168,13 +171,40 @@ public class YActivity implements Serializable {
 		this.cost = cost;
 	}
 
-	@Column(name = "activityAddress", length = 100, nullable = false)
-	public String getActivityAddress() {
-		return activityAddress;
+	
+	@Column(name = "contactPhoneNum", length = 20, nullable = false)
+	public String getContactPhoneNum() {
+		return contactPhoneNum;
 	}
 
-	public void setActivityAddress(String activityAddress) {
-		this.activityAddress = activityAddress;
+	public void setContactPhoneNum(String contactPhoneNum) {
+		this.contactPhoneNum = contactPhoneNum;
+	}
+
+	@Column(name = "benifit", length = 100, nullable = true)
+	public String getBenifit() {
+		return benifit;
+	}
+
+	public void setBenifit(String benifit) {
+		this.benifit = benifit;
+	}
+	@Column(name = "addressCity", length = 100, nullable = false)
+	public String getAddressCity() {
+		return addressCity;
+	}
+
+	public void setAddressCity(String addressCity) {
+		this.addressCity = addressCity;
+	}
+
+	@Column(name = "addressDetial", length = 100, nullable = false)
+	public String getAddressDetial() {
+		return addressDetial;
+	}
+
+	public void setAddressDetial(String addressDetial) {
+		this.addressDetial = addressDetial;
 	}
 
 	@Column(name = "activityAddressLongitude", length = 50, nullable = false)
@@ -223,14 +253,6 @@ public class YActivity implements Serializable {
 		this.creatorPhoneNum = creatorPhoneNum;
 	}
 
-	@Column(name = "contactPhone", length = 20, nullable = false)
-	public String getContactPhone() {
-		return contactPhone;
-	}
-
-	public void setContactPhone(String contactPhone) {
-		this.contactPhone = contactPhone;
-	}
 
 	@Column(name = "picturePath", length = 100, nullable = false)
 	public String getPicturePath() {
@@ -276,16 +298,20 @@ public class YActivity implements Serializable {
 	public String toString() {
 		return "YActivity [id=" + id + ", picturePath=" + picturePath
 				+ ", category=" + category + ", creatorPhoneNum="
-				+ creatorPhoneNum + ", contactPhone=" + contactPhone
-				+ ", title=" + title + ", introduce=" + introduce
-				+ ", createTimeDate=" + createTimeDate + ", beginTime="
-				+ beginTime + ", endTime=" + endTime + ", cost=" + cost
-				+ ", activityAddress=" + activityAddress
-				+ ", activityAddressLongitude=" + activityAddressLongitude
-				+ ", activityAddressLatitude=" + activityAddressLatitude
-				+ ", count=" + count + "]";
+				+ creatorPhoneNum + ", title=" + title + ", introduce="
+				+ introduce + ", createTimeDate=" + createTimeDate
+				+ ", beginTime=" + beginTime + ", endTime=" + endTime
+				+ ", cost=" + cost + ", activityAddressLongitude="
+				+ activityAddressLongitude + ", activityAddressLatitude="
+				+ activityAddressLatitude + ", count=" + count
+				+ ", contactPhoneNum=" + contactPhoneNum + ", benifit="
+				+ benifit + ", addressCity=" + addressCity + ", addressDetial="
+				+ addressDetial + "]";
 	}
 
+
+
+	
 
 
 }

@@ -44,8 +44,11 @@ public class YUserDaoImpl extends BaseDao implements YUserDao {
 		Session session = this.getSession();
 		Transaction tx = session.beginTransaction();
 		try {
-			String hql = "update YUser user set user.userName=?,phoneNum=?,password=?,"
-					+ "facePath=?,introduce=?,lastLoginTimeDate=?,lastLoginIp=?,gender=?,origin=?,isLogin=?where user.id=?";
+			String hql = "update YUser user set "
+					+ "user.userName=?,phoneNum=?,user.password=?,"
+					+ "user.facePath=?,user.introduce=?,user.lastLoginTimeDate=?,"
+					+ "user.lastLoginIp=?,user.gender=?,user.origin=?,user.isLogin=? "
+					+ "where user.id=?";
 			Query query = session.createQuery(hql);
 			query.setParameter(0, user.getUserName());
 			query.setParameter(1, user.getPhoneNum());
@@ -109,5 +112,15 @@ public class YUserDaoImpl extends BaseDao implements YUserDao {
 		query.setParameter(0, phoneNum);
 		query.setParameter(1, pwd);
 		return (YUser) query.uniqueResult();
+	}
+
+	@Override
+	public java.util.List<YUser> searchSecondUser(String userName,String phoneNum) {
+		System.out.println("searchSecondUser------------------>"+userName);
+		Session session = this.getSession();
+		String hql = "from YUser user where user.userName like '%"+userName+"%' "
+				+ "where user.phoneNum in(select friendNum from YRelationSecond relationsecond where relationsecond.hostNum=?)";
+		Query query = session.createQuery(hql);
+		return  query.list();
 	}
 }

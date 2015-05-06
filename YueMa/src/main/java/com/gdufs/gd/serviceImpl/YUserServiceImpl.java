@@ -1,6 +1,7 @@
 package com.gdufs.gd.serviceImpl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -88,6 +89,11 @@ public class YUserServiceImpl implements YUserService {
 	@Override
 	public boolean updateUser(YUser user) {
 		return userDao.updateUser(user);
+	}
+
+	@Override
+	public List<YUser> searchSecondUser(String userName,String phoneNum) {
+		return userDao.searchSecondUser(userName,phoneNum);
 	}
 
 

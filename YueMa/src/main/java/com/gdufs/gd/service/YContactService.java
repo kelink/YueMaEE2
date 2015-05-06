@@ -59,5 +59,11 @@ public interface YContactService {
 	
 	public boolean addFriends(YContact friend1,YContact friend2);
 	
+	/**
+	 * 获取一度人脉
+	 * @return
+	 */
+	public List<YUser> getFirstUser(String hostNum);
+
 
 }

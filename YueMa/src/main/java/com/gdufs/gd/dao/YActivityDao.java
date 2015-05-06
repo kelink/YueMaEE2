@@ -59,4 +59,6 @@ public interface YActivityDao {
 	public int countFriendsActivity(String phoneNum);
 	
 	public boolean delete(int activityId);
+	
+	public boolean updateActivity(YActivity activity);
 }

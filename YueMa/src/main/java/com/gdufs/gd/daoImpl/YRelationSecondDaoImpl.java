@@ -43,12 +43,16 @@ public class YRelationSecondDaoImpl extends BaseDao implements YRelationSecondDa
 	@Override
 	public boolean isSecondFrined(String hostNum, String friendNum) {
 		Session session = this.getSession();
-		String hql = "Select count(*) from YRelationSecond second where (second.hostNum=? and second.friendNum=?) or(second.friendNum=? and second.hostNum=?)";
+//		String hql = "Select count(*) from YRelationSecond second where (second.hostNum=? and second.friendNum=?) "
+//				+ "or(second.friendNum=? and second.hostNum=?)";
+//		
+		String hql = "Select count(*) from YRelationSecond second where second.hostNum=? and second.friendNum=?";
+		
 		Query query = session.createQuery(hql);
 		query.setParameter(0, hostNum);
 		query.setParameter(1, friendNum);
-		query.setParameter(2, hostNum);
-		query.setParameter(3, friendNum);
+		//query.setParameter(2, hostNum);
+		//query.setParameter(3, friendNum);
 		
 		Object object=query.uniqueResult();
 		int num=Integer.parseInt(object.toString());
@@ -57,5 +61,4 @@ public class YRelationSecondDaoImpl extends BaseDao implements YRelationSecondDa
 		}
 		return false;
 	}
-
 }

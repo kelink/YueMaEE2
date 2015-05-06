@@ -86,9 +86,10 @@ public class YContactDaoImpl extends BaseDao implements YContactDao {
 	@Override
 	public List<YContact> getFirstContact(String phoneNum) {
 		Session session = this.getSession();
-		String hql = "from YContact where hostNum=?";
+		String hql = "from YContact where hostNum=? and isSysUser=?";
 		Query query = session.createQuery(hql);
 		query.setParameter(0, phoneNum);
+		query.setParameter(1, 1);//1表示为系统用户
 		return  query.list();
 	}
 
@@ -115,6 +116,16 @@ public class YContactDaoImpl extends BaseDao implements YContactDao {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public List<YUser> getFirstUser(String hostNum) {
+		Session session = this.getSession();
+		String hql="from YUser user where user.phoneNum in (select friendNum from YContact contact where contact.hostNum=? and contact.isSysUser=?)";
+		Query query = session.createQuery(hql);
+		query.setParameter(0, hostNum);
+		query.setParameter(1, 1);	
+		return query.list();
 	}
 
 

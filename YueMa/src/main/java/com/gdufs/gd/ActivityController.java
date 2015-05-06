@@ -41,7 +41,6 @@ import com.gdufs.gd.util.DateUtil;
 import com.gdufs.gd.util.JacksonUtil;
 import com.gdufs.gd.util.UploadUtil;
 
-
 @Controller
 @RequestMapping("/activity")
 public class ActivityController {
@@ -73,14 +72,18 @@ public class ActivityController {
 			@RequestParam(value = C.ParamsName.BEGINTIME, required = true, defaultValue = "") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date beginTime,
 			@RequestParam(value = C.ParamsName.ENDTIME, required = true, defaultValue = "") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endTime,
 			@RequestParam(value = C.ParamsName.COST, required = false, defaultValue = "") double cost,
-			@RequestParam(value = C.ParamsName.ACTIVITY_ADDRESS, required = true, defaultValue = "") String activityAddress,
+			@RequestParam(value = C.ParamsName.ACTIVITY_ADDRESS_CITY, required = true, defaultValue = "") String addressCity,
+			@RequestParam(value = C.ParamsName.ACTIVITY_ADDRESS_DETIAL, required = true, defaultValue = "") String addressDetial,
 			@RequestParam(value = C.ParamsName.ACTIVITY_ADDRESS_LATITUDE, required = true, defaultValue = "") String activityAddressLatitude,
 			@RequestParam(value = C.ParamsName.ACTIVITY_ADDRESS_LONGITUDE, required = true, defaultValue = "") String activityAddressLongitude,
+			@RequestParam(value = C.ParamsName.BENIFIT, required = true, defaultValue = "") String benifit,
+			@RequestParam(value = C.ParamsName.CONTACTPHONE, required = true, defaultValue = "") String contactPhoneNum,
 			@RequestParam(value = C.ParamsName.COUNT, required = true, defaultValue = "") int count,
 			@RequestParam(value = C.ParamsName.CATEGORY, required = true, defaultValue = "") String category,
 			@RequestParam(value = C.ParamsName.PHONE_NUM, required = true, defaultValue = "") String creatorPhoneNum,
-			@RequestParam(value = C.ParamsName.CONTACTPHONE, required = true, defaultValue = "") String contactPhone,
-			@RequestParam(value = C.ParamsName.UID, required = true, defaultValue = "") int uId) {
+			@RequestParam(value = C.ParamsName.UID, required = true, defaultValue = "") int userId) {
+		
+		System.out.println(contactPhoneNum);
 		// 上传图片
 		HashMap<String, String> pathMap = UploadUtil.uploadFiles(request);
 		System.out.println(pathMap.toString());
@@ -93,7 +96,7 @@ public class ActivityController {
 		
 		// 新活动
 		YActivity activity = new YActivity();
-		YUser creator = userService.getUserById(uId);
+		YUser creator = userService.getUserById(userId);
 		System.out.println(creator);
 		activity.setTitle(title);
 		activity.setIntroduce(introduce);
@@ -101,15 +104,18 @@ public class ActivityController {
 		activity.setBeginTime(beginTime);
 		activity.setEndTime(endTime);
 		activity.setCost(cost);
-		activity.setActivityAddress(activityAddress);
+		activity.setAddressCity(addressCity);
+		activity.setAddressDetial(addressDetial);
 		activity.setActivityAddressLatitude(activityAddressLatitude);
 		activity.setActivityAddressLongitude(activityAddressLongitude);
+		activity.setContactPhoneNum(contactPhoneNum);
 		activity.setCount(count);
-		activity.setCreator(creator);
+		activity.setCreator(creator);	
 		activity.setCreatorPhoneNum(creatorPhoneNum);
-		activity.setContactPhone(contactPhone);
 		activity.setCategory(category);
+		activity.setBenifit(benifit);
 		activity.setPicturePath(picturePath);
+		System.out.println(activity);
 		// 参与者
 		YActivityUser activityUser = new YActivityUser();
 		activityUser.setActivity(activity);
@@ -127,7 +133,7 @@ public class ActivityController {
 			message.setResultMap(null);
 		} else {
 			message.setCode(C.ResponseCode.ERROR);
-			message.setMessage(C.ResponseMessage.WRONG_USER_INFO);
+			message.setMessage(C.ResponseMessage.ERROR);
 			message.setResultMap(null);
 		}
 		return JacksonUtil.writeEntity2JSON(message);
@@ -176,7 +182,7 @@ public class ActivityController {
 				friendsActivityObj.setCommentNum(String.valueOf(activity.getComments().size()));
 				friendsActivityObj.setLikeNum(String.valueOf(activity.getLikes().size()));//需要修改修改，先测试
 				friendsActivityObj.setCategory(activity.getCategory());
-				friendsActivityObj.setActivityAddress(activity.getActivityAddress());
+				friendsActivityObj.setActivityAddress(activity.getAddressCity()+activity.getAddressDetial());
 				friendsActivityObj.setActivityAddressLatitude(activity.getActivityAddressLatitude());
 				friendsActivityObj.setActivityAddressLongitude(activity.getActivityAddressLongitude());
 				friendsActivityObj.setCost(String.valueOf(activity.getCost()));
@@ -299,7 +305,10 @@ public class ActivityController {
 			tempActivity.setCategory(yactivity.getCategory());
 			tempActivity.setCost(String.valueOf(yactivity.getCost()));
 			tempActivity.setCount(String.valueOf(yactivity.getCount()));
-			tempActivity.setActivityAddress(yactivity.getActivityAddress());
+			tempActivity.setContactPhoneNum(yactivity.getContactPhoneNum());
+			tempActivity.setAddressCity(yactivity.getAddressCity());
+			tempActivity.setAddressDetial(yactivity.getAddressDetial());
+			tempActivity.setBenifit(yactivity.getBenifit());
 			tempActivity.setActivityAddressLatitude(yactivity.getActivityAddressLatitude());
 			tempActivity.setActivityAddressLongitude(yactivity.getActivityAddressLongitude());
 			tempActivity.setCommentNum(String.valueOf(yactivity.getComments().size()));
@@ -440,4 +449,75 @@ public class ActivityController {
 		}
 		return JacksonUtil.writeEntity2JSON(message);
 	}
+	
+	@RequestMapping(value = "/updateActivity", method = { RequestMethod.GET,
+			RequestMethod.POST })
+	@ResponseBody
+	public String updateActivity(
+			final HttpServletRequest request,
+			final HttpServletResponse response,
+			@RequestParam(value = C.ParamsName.TITLE, required = true, defaultValue = "") String title,
+			@RequestParam(value = C.ParamsName.INTRODUCE, required = false, defaultValue = "") String introduce,
+			@RequestParam(value = C.ParamsName.BEGINTIME, required = true, defaultValue = "") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date beginTime,
+			@RequestParam(value = C.ParamsName.ENDTIME, required = true, defaultValue = "") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endTime,
+			@RequestParam(value = C.ParamsName.COST, required = false, defaultValue = "") double cost,
+			@RequestParam(value = C.ParamsName.ACTIVITY_ADDRESS_CITY, required = true, defaultValue = "") String addressCity,
+			@RequestParam(value = C.ParamsName.ACTIVITY_ADDRESS_DETIAL, required = true, defaultValue = "") String addressDetial,
+			@RequestParam(value = C.ParamsName.ACTIVITY_ADDRESS_LATITUDE, required = true, defaultValue = "") String activityAddressLatitude,
+			@RequestParam(value = C.ParamsName.ACTIVITY_ADDRESS_LONGITUDE, required = true, defaultValue = "") String activityAddressLongitude,
+			@RequestParam(value = C.ParamsName.BENIFIT, required = true, defaultValue = "") String benifit,
+			@RequestParam(value = C.ParamsName.CONTACTPHONE, required = true, defaultValue = "") String contactPhoneNum,
+			@RequestParam(value = C.ParamsName.COUNT, required = true, defaultValue = "") int count,
+			@RequestParam(value = C.ParamsName.CATEGORY, required = true, defaultValue = "") String category,
+			@RequestParam(value = C.ParamsName.PHONE_NUM, required = true, defaultValue = "") String creatorPhoneNum,
+			@RequestParam(value = C.ParamsName.AID, required = true, defaultValue = "0") int activityId) {
+		TransferMessage message = new TransferMessage();
+		if (activityId==0) {
+			message.setCode(C.ResponseCode.ERROR);
+			message.setMessage(C.ResponseMessage.ERROR);
+			message.setResultMap(null);
+		}else {
+			// 上传图片
+			HashMap<String, String> pathMap = UploadUtil.uploadFiles(request);
+			System.out.println(pathMap.toString());
+			// 设定只有一张图片
+			String picturePath = "";
+			for (String path : pathMap.values()) {
+				picturePath = path;
+			}
+			YActivity activity = activityService.getActivityByActivityId(activityId);
+			activity.setTitle(title);
+			activity.setIntroduce(introduce);
+			activity.setCreateTimeDate(new Date());
+			activity.setBeginTime(beginTime);
+			activity.setEndTime(endTime);
+			activity.setCost(cost);
+			activity.setAddressCity(addressCity);
+			activity.setAddressDetial(addressDetial);
+			activity.setActivityAddressLatitude(activityAddressLatitude);
+			activity.setActivityAddressLongitude(activityAddressLongitude);
+			activity.setContactPhoneNum(contactPhoneNum);
+			activity.setCount(count);
+			activity.setCreatorPhoneNum(creatorPhoneNum);
+			activity.setCategory(category);
+			activity.setBenifit(benifit);
+			if (!picturePath.equals("")) {
+				activity.setPicturePath(picturePath);
+			}
+			
+			if (activityService.updateActivity(activity)) {
+				message.setCode(C.ResponseCode.SUCCESS);
+				message.setMessage(C.ResponseMessage.SUCCESS);
+				message.setResultMap(null);
+			}else {
+				message.setCode(C.ResponseCode.ERROR);
+				message.setMessage(C.ResponseMessage.ERROR);
+				message.setResultMap(null);
+			}
+			
+		}
+		return JacksonUtil.writeEntity2JSON(message);
+	}
+	
+	
 }

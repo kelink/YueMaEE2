@@ -3,6 +3,7 @@ package com.gdufs.gd.dao;
 import java.util.List;
 
 import com.gdufs.gd.entity.YContact;
+import com.gdufs.gd.entity.YUser;
 
 public interface YContactDao {
 	/**
@@ -33,5 +34,12 @@ public interface YContactDao {
 	public YContact getContactByPhoneNum(String hostNum,String friendNum);
 	
 	public boolean isFirstFriend(String hostNum,String friendNum);
+	
+	/**
+	 * 获取一度已经注册了的人脉
+	 * @param phoneNum
+	 * @return
+	 */
+	public List<YUser> getFirstUser(String hostNum);
 	
 }

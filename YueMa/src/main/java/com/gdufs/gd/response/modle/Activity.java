@@ -25,10 +25,13 @@ public class Activity extends BaseEntity {
 	private String cost;// 活动话费
 	private String beginTime;// 开始时间
 	private String endTime;// 结束时间
-	private String activityAddress;// 活动地点
 	private String activityAddressLongitude;// 经度
 	private String activityAddressLatitude;// 纬度
-
+	private String contactPhoneNum;//联系电话
+	private String benifit;//活动好处
+	private String addressCity;//活动省市区
+	private String addressDetial;//活动的详细地址
+	
 	private String commentNum;// 评论的数目
 	private String likeNum;// 赞的个数(在活动中获取)
 
@@ -139,14 +142,6 @@ public class Activity extends BaseEntity {
 		this.cost = cost;
 	}
 
-	public String getActivityAddress() {
-		return activityAddress;
-	}
-
-	public void setActivityAddress(String activityAddress) {
-		this.activityAddress = activityAddress;
-	}
-
 	public String getActivityAddressLongitude() {
 		return activityAddressLongitude;
 	}
@@ -211,6 +206,38 @@ public class Activity extends BaseEntity {
 		this.endTime = endTime;
 	}
 
+	public String getContactPhoneNum() {
+		return contactPhoneNum;
+	}
+
+	public void setContactPhoneNum(String contactPhoneNum) {
+		this.contactPhoneNum = contactPhoneNum;
+	}
+
+	public String getBenifit() {
+		return benifit;
+	}
+
+	public void setBenifit(String benifit) {
+		this.benifit = benifit;
+	}
+
+	public String getAddressCity() {
+		return addressCity;
+	}
+
+	public void setAddressCity(String addressCity) {
+		this.addressCity = addressCity;
+	}
+
+	public String getAddressDetial() {
+		return addressDetial;
+	}
+
+	public void setAddressDetial(String addressDetial) {
+		this.addressDetial = addressDetial;
+	}
+
 	@Override
 	public String toString() {
 		return "Activity [id=" + id + ", activityId=" + activityId
@@ -221,12 +248,15 @@ public class Activity extends BaseEntity {
 				+ picturePath + ", title=" + title + ", introduce=" + introduce
 				+ ", category=" + category + ", count=" + count + ", cost="
 				+ cost + ", beginTime=" + beginTime + ", endTime=" + endTime
-				+ ", activityAddress=" + activityAddress
 				+ ", activityAddressLongitude=" + activityAddressLongitude
 				+ ", activityAddressLatitude=" + activityAddressLatitude
-				+ ", commentNum=" + commentNum + ", likeNum=" + likeNum
-				+ ", joinerList=" + joinerList + ", commentsList="
+				+ ", contactPhoneNum=" + contactPhoneNum + ", benifit="
+				+ benifit + ", addressCity=" + addressCity + ", addressDetial="
+				+ addressDetial + ", commentNum=" + commentNum + ", likeNum="
+				+ likeNum + ", joinerList=" + joinerList + ", commentsList="
 				+ commentsList + "]";
 	}
+
+	
 
 }

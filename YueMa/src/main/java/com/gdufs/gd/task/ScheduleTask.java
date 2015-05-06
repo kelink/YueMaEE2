@@ -7,12 +7,10 @@ import javax.annotation.Resource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.gdufs.gd.daoImpl.YMessageDaoImpl;
 import com.gdufs.gd.entity.YMessageUser;
 import com.gdufs.gd.relation.CalMain;
 import com.gdufs.gd.service.JPushServie;
 import com.gdufs.gd.service.YMessageService;
-import com.gdufs.gd.serviceImpl.JPushServiecImpl;
 
 
 //关系计算模块

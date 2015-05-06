@@ -26,4 +26,7 @@ public interface YRelationSecondDao {
 	 * @return
 	 */
 	public boolean isSecondFrined(String hostNum,String friendNum);
+	
+
+	
 }

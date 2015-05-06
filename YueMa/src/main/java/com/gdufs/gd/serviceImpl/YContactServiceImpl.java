@@ -105,5 +105,11 @@ public class YContactServiceImpl implements YContactService {
 		list.add(friend2);
 		return contactDao.addContacts(list);
 	}
+
+	@Override
+	public List<YUser> getFirstUser(String hostNum) {
+		return contactDao.getFirstUser(hostNum);
+	}
+
 	
 }

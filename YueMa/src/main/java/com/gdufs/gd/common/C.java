@@ -27,13 +27,14 @@ public class C {
 		public static final String BEGINTIME = "beginTime";
 		public static final String ENDTIME = "endTime";
 		public static final String COST = "cost";
-		public static final String ACTIVITY_ADDRESS = "activityAddress";
+		public static final String ACTIVITY_ADDRESS_CITY = "addressCity";
+		public static final String ACTIVITY_ADDRESS_DETIAL = "addressDetial";
 		public static final String ACTIVITY_ADDRESS_LATITUDE = "activityAddressLatitude";
 		public static final String ACTIVITY_ADDRESS_LONGITUDE = "activityAddressLongitude";
 		public static final String COUNT = "count";
 		public static final String CATEGORY = "category";
 		public static final String BENIFIT = "benifit";
-		public static final String CONTACTPHONE = "contactPhone";
+		public static final String CONTACTPHONE = "contactPhoneNum";
 		// 分页
 		public static final String PAGENUM = "pageNum";
 		public static final String PAGESIZE = "pageSize";

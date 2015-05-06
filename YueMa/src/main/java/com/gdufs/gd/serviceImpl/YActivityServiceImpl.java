@@ -80,4 +80,9 @@ public class YActivityServiceImpl implements YActivityService {
 		return activityDao.countFriendsActivity(phoneNum);
 	}
 
+	@Override
+	public boolean updateActivity(YActivity activity) {
+		return activityDao.updateActivity(activity);
+	}
+
 }
